@@ -1,0 +1,38 @@
+html {
+  scroll-behavior: smooth;
+}
+
+.section {
+  scroll-margin-top: 5rem;
+}
+
+body {
+  min-height: 100%;
+  background: linear-gradient(
+    to bottom,
+    #0a1128 0%,
+    #4b3f8f 22%,
+    #6a8fd8 45%,
+    #a9c6f0 70%,
+    #cfe6f7 100%
+  );
+}
+
+/* overrides (uncomment this when design is finalized) */
+/*
+.content .content__titlemeta h1,
+.content .content__titlemeta {
+  color: #ffffff;
+}
+
+.content .content__block {
+  --bg2: transparent;
+  --border: transparent;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+} */
+
+.header {
+  background: rgba(255, 255, 255, 0.92);
+}
