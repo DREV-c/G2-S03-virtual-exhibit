@@ -5,10 +5,6 @@
   --font-body: 'Space Grotesk', sans-serif;
 }
 
-body {
-  font-family: var(--font-body);
-}
-
 html,
 body {
   margin: 0;
@@ -21,10 +17,11 @@ html {
 }
 
 .section {
-  scroll-margin-top: 4.5rem; /* roughly your header's height — adjust to match */
+  scroll-margin-top: 4.5rem; 
 }
 
 body {
+  font-family: var(--font-body);
   background: linear-gradient(
     to bottom,
     #0a1128 0%,
@@ -35,12 +32,15 @@ body {
   );
 }
 
-/* Full-bleed: strip the fixed-width column entirely */
 .content {
+  display: block !important;   
   max-width: 100% !important;
-  width: 100% !important;
   margin: 0 !important;
   padding: 0 !important;
+}
+
+.toc {
+  display: none !important;    
 }
 
 .content__block {
@@ -61,8 +61,6 @@ body {
   padding: 0 !important;
 }
 
-/* Fold the title/author/reading-time card away entirely —
-   this info gets reintroduced inside <Hero /> instead (see below) */
 .content__titlemeta {
   display: none !important;
 }
