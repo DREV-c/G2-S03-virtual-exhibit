@@ -22,3 +22,9 @@ node_modules/
 # OS
 .DS_Store
 Thumbs.db
+
+.context.md
+plans/
+specs/
+documents/
+CLAUDE.md
