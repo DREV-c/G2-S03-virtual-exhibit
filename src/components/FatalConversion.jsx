@@ -1,3 +1,6 @@
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import StarField from './background/StarField.jsx';
 import Launch from './sections/Launch.jsx';
 import MissionBriefing from './sections/MissionBriefing.jsx';
 import AboutBinary from './sections/AboutBinary.jsx';
@@ -20,14 +23,25 @@ const pageGradient = {
 };
 
 export default function FatalConversion() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: containerRef });
+
+  const starOpacity = useTransform(scrollYProgress, [0, 0.3, 0.45], [1, 1, 0]);
+
   return (
-    <div style={pageGradient}>
-      <Launch />
-      <MissionBriefing />
-      <AboutBinary />       {/* owner: Person B */}
-      <RegisterRoom />      {/* owner: Person B */}
-      <DualSRIFailure />    {/* owner: Person C */}
-      <Postmortem />        {/* owner: Person D */}
+    <div ref={containerRef} style={{ position: 'relative', ...pageGradient }}>
+      <motion.div style={{ position: 'fixed', inset: 0, opacity: starOpacity, zIndex: 0, pointerEvents: 'none' }}>
+        <StarField />
+      </motion.div>
+
+      <div style={pageGradient}>
+        <Launch />
+        <MissionBriefing />
+        <AboutBinary />       {/* owner: Person B */}
+        <RegisterRoom />      {/* owner: Person B */}
+        <DualSRIFailure />    {/* owner: Person C */}
+        <Postmortem />        {/* owner: Person D */}
+      </div>
     </div>
   );
 }
