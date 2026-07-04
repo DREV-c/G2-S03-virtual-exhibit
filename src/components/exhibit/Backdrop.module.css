@@ -1,0 +1,44 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+}
+
+/* Static base: dark throughout, a faint cyan telemetry glow up top (calm). */
+.base {
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(34, 211, 238, 0.12), transparent 55%),
+    linear-gradient(180deg, #070912 0%, var(--deep-void) 34%, var(--space-black) 100%);
+}
+
+/* Amber "warning" heat bloom — peaks mid-descent. */
+.amber {
+  background:
+    radial-gradient(90% 60% at 50% 92%, rgba(245, 158, 11, 0.55), transparent 60%);
+}
+
+/* Red "failure" heat bloom — grows toward the overflow. */
+.red {
+  background:
+    radial-gradient(80% 70% at 50% 60%, rgba(239, 68, 68, 0.6), transparent 62%);
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+}
+
+/* Red wash / vignette at the failure beats. */
+.wash {
+  background:
+    radial-gradient(140% 120% at 50% 40%, transparent 40%, rgba(239, 68, 68, 0.5) 100%),
+    linear-gradient(0deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.12));
+  mix-blend-mode: screen;
+}

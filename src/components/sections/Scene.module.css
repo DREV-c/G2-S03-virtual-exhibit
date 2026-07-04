@@ -1,0 +1,79 @@
+.scene {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: var(--s8) var(--s3);
+  box-sizing: border-box;
+  /* Clip horizontal bleed (e.g. BorderGlow's outer glow) without adding a nested
+   * scroll or clipping the vertical glow. */
+  overflow-x: clip;
+}
+
+.inner {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  margin-bottom: var(--s3);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-silver);
+}
+
+.index {
+  color: var(--telemetry-cyan);
+  border: 1px solid var(--hairline-strong);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-weight: 500;
+}
+
+.rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--hairline-strong), transparent);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 4.4vw, 3rem);
+  line-height: 1.04;
+  color: #eef2f6;
+  margin: 0 0 var(--s2);
+}
+
+.lede {
+  max-width: 64ch;
+  color: var(--muted-silver);
+  font-size: 1.03rem;
+  line-height: 1.65;
+  margin: 0 0 var(--s3);
+}
+
+.panel {
+  background: linear-gradient(180deg, rgba(16, 22, 46, 0.72), rgba(11, 16, 32, 0.72));
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  padding: var(--s4);
+  backdrop-filter: blur(6px);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.grid2 {
+  display: grid;
+  gap: var(--s3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+}

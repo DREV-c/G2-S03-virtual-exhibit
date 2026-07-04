@@ -1,0 +1,156 @@
+.concepts {
+  display: grid;
+  gap: var(--s3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  margin-bottom: var(--s5);
+}
+
+.concept {
+  padding: var(--s3);
+  border-radius: var(--radius);
+  border: 1px solid var(--hairline);
+  background: rgba(11, 16, 32, 0.5);
+}
+.conceptK {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  color: var(--telemetry-cyan);
+  margin: 0 0 var(--s1);
+}
+.conceptB {
+  margin: 0;
+  color: var(--muted-silver);
+  font-size: 0.92rem;
+  line-height: 1.58;
+}
+.conceptB code {
+  font-family: var(--font-mono);
+  color: var(--ariane-silver);
+  background: rgba(5, 6, 10, 0.6);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.conceptB strong {
+  color: #eef2f6;
+}
+
+.lab {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(16, 22, 46, 0.7), rgba(11, 16, 32, 0.78));
+  padding: var(--s4);
+}
+
+.labHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s2);
+  flex-wrap: wrap;
+  margin-bottom: var(--s3);
+}
+.labTitle {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: #eef2f6;
+}
+.labHint {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted-silver);
+}
+
+.bits {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.bitCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.place {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: rgba(201, 209, 217, 0.45);
+}
+
+.bit {
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  font-weight: 600;
+  width: clamp(2rem, 8vw, 3rem);
+  height: clamp(2.6rem, 9vw, 3.6rem);
+  border-radius: 10px;
+  border: 1px solid var(--hairline);
+  background: rgba(5, 6, 10, 0.5);
+  color: rgba(201, 209, 217, 0.5);
+  cursor: pointer;
+  transition: all var(--dur-micro) ease;
+}
+.bit:hover {
+  border-color: var(--hairline-strong);
+}
+.on {
+  color: var(--telemetry-cyan);
+  border-color: rgba(34, 211, 238, 0.55);
+  background: rgba(34, 211, 238, 0.12);
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.25);
+}
+.signBit {
+  border-color: rgba(245, 158, 11, 0.45);
+}
+.signOn {
+  color: var(--booster-amber);
+  border-color: var(--booster-amber);
+  background: rgba(245, 158, 11, 0.14);
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.3);
+}
+
+.readouts {
+  display: flex;
+  gap: var(--s5);
+  justify-content: center;
+  margin-top: var(--s4);
+  flex-wrap: wrap;
+}
+.ro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.roK {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-silver);
+}
+.roV {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #eef2f6;
+}
+.pos {
+  color: var(--signal-green);
+}
+.neg {
+  color: var(--catastrophe-red);
+}
+
+.foot {
+  margin: var(--s4) 0 0;
+  text-align: center;
+  color: var(--muted-silver);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.signedWord {
+  color: var(--catastrophe-red);
+  font-weight: 600;
+}

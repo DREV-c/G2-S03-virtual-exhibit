@@ -1,69 +1,235 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
+import Scene, { sceneStyles } from './Scene.jsx';
+import { useExhibit } from '../exhibit/ExhibitState.jsx';
 import styles from './MissionBriefing.module.css';
 
+const T_END = 39.1;
+
 const TICKS = [
-  { t: 'T+0', color: '#2fae4e' },
-  { t: 'T+30', color: '#2fae4e' },
-  {
-    t: 'T+36.7',
-    color: '#e63946',
-    label: 'T+36.70 s — Operand Error (SRI 2)',
-    detail:
-      'The backup inertial reference unit throws an operand error while converting a 64-bit float to a 16-bit signed integer.',
-  },
-  { t: 'T+36.8', color: '#6a8fd8' },
-  { t: 'T+39.0', color: '#f4a300' },
-  { t: 'T+39.1', color: '#e63946' },
+  { t: 0, tag: 'T+0.0s', title: 'Liftoff', sev: 'ok', sig: 0.05,
+    alt: '0 km', vel: '0 m/s', reg: '0x0000',
+    detail: 'Ignition and release at Kourou. Both inertial reference systems (SRI 1 and SRI 2) are streaming attitude data to the on-board computer.' },
+  { t: 7, tag: 'T+7.0s', title: 'SRI alignment still running', sev: 'ok', sig: 0.08,
+    alt: '~0.2 km', vel: 'rising', reg: '0x0AF0',
+    detail: 'A leftover Ariane 4 alignment routine keeps computing horizontal bias BH — needed before launch, useless after, but still running "just in case".' },
+  { t: 30, tag: 'T+30.0s', title: 'Nominal flight', sev: 'ok', sig: 0.14,
+    alt: '~3.5 km', vel: 'high', reg: '0x5C21',
+    detail: 'Ariane 5 is far faster and steeper than Ariane 4 ever flew. Horizontal velocity is climbing toward values the reused code was never tested against.' },
+  { t: 36.7, tag: 'T+36.7s', title: 'Operand error — SRI 2', sev: 'warn', sig: 0.66,
+    alt: '~3.7 km', vel: 'exceeds 32,767', reg: '0x8000',
+    detail: 'Casting the 64-bit BH into a signed 16-bit integer overflows. SRI 2 raises an unprotected operand error, shuts itself down, and emits a diagnostic bit pattern.' },
+  { t: 36.75, tag: 'T+36.75s', title: 'Diagnostics on the bus', sev: 'warn', sig: 0.75,
+    alt: '~3.7 km', vel: '—', reg: 'diag',
+    detail: 'The failure diagnostic word is written onto the databus — the same channel the OBC reads flight values from. Data and diagnostics now look alike.' },
+  { t: 36.8, tag: 'T+36.8s', title: 'Same fault — SRI 1', sev: 'bad', sig: 0.86,
+    alt: '~3.7 km', vel: '—', reg: '0x8000',
+    detail: 'The active SRI 1 runs identical software on identical data and fails identically 0.05s later. The redundant unit was never a second opinion.' },
+  { t: 37.0, tag: 'T+37.0s', title: 'Nozzles hard over', sev: 'bad', sig: 0.93,
+    alt: '~4 km', vel: '—', reg: '0x8000',
+    detail: 'The OBC interprets the diagnostic word as a real attitude angle and commands full nozzle deflection. The boosters swivel to the stops.' },
+  { t: 39.0, tag: 'T+39.0s', title: 'Break-up & self-destruct', sev: 'bad', sig: 0.97,
+    alt: '~4 km', vel: '—', reg: '0x8000',
+    detail: 'Aerodynamic loads tear the boosters from the core. The range-safety system detects the break-up and arms self-destruct.' },
+  { t: 39.1, tag: 'T+39.1s', title: 'Vehicle destroyed', sev: 'bad', sig: 1.0,
+    alt: '—', vel: '—', reg: '—',
+    detail: 'Ariane 5 Flight V88 and its four Cluster science satellites are gone. A $370 million mission, ended by one integer conversion.' },
 ];
 
+const SEV_LABEL = { ok: 'Nominal', warn: 'Fault', bad: 'Critical' };
+
 export default function MissionBriefing() {
-  const [active, setActive] = useState(2);
-  const activeTick = TICKS[active];
+  const { easeEventTo, releaseEvent } = useExhibit();
+  const [active, setActive] = useState(0);
+  const [inView, setInView] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const trackRef = useRef(null);
+  const wrapRef = useRef(null);
+
+  const tick = TICKS[active];
+  const pct = (tick.t / T_END) * 100;
+  const atStart = active === 0;
+  const atEnd = active === TICKS.length - 1;
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => setInView(e.isIntersecting),
+      { threshold: 0.25 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (inView) easeEventTo(TICKS[active].sig);
+    else releaseEvent();
+  }, [active, inView, easeEventTo, releaseEvent]);
+
+  const select = (i) => setActive(Math.max(0, Math.min(TICKS.length - 1, i)));
+
+  const nearestFromClientX = (clientX) => {
+    const rect = trackRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const frac = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    const time = frac * T_END;
+    let best = 0;
+    let bestD = Infinity;
+    TICKS.forEach((tk, i) => {
+      const d = Math.abs(tk.t - time);
+      if (d < bestD) {
+        bestD = d;
+        best = i;
+      }
+    });
+    select(best);
+  };
+
+  const onPointerDown = (e) => {
+    setDragging(true);
+    trackRef.current?.setPointerCapture?.(e.pointerId);
+    nearestFromClientX(e.clientX);
+  };
+  const onPointerMove = (e) => {
+    if (dragging) nearestFromClientX(e.clientX);
+  };
+  const onPointerUp = () => setDragging(false);
+
+  const onKeyDown = (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      select(active + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      select(active - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      select(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      select(TICKS.length - 1);
+    }
+  };
 
   return (
-    <section id="mission-briefing" className={styles.section}>
-      <h2 className={styles.heading}>Mission Briefing</h2>
-      <p className={styles.body}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-        eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </p>
+    <Scene id="mission-briefing" index="02" kicker="Mission Briefing · Flight V88 timeline">
+      <div ref={wrapRef}>
+        <h2 className={sceneStyles.title}>Thirty-nine seconds</h2>
+        <p className={sceneStyles.lede}>
+          Step through the launch timeline. Nothing looks wrong until T+36.7s — then
+          the same fault takes both computers in fifty milliseconds. Move past the
+          fault and the whole instrument starts to come apart with you.
+        </p>
 
-      <h3 className={styles.subheading}>V88 Launch Sequence</h3>
-
-      <div className={styles.track}>
-        <div className={styles.ticks}>
-          {TICKS.map((tick, i) => (
-            <div key={tick.t} className={styles.tickWrap}>
-              <div className={styles.segment} style={{ background: tick.color }} />
-              <button
-                onClick={() => setActive(i)}
-                aria-label={`View detail for ${tick.t}`}
-                className={clsx(styles.tick, { [styles.tickActive]: active === i })}
-                style={{ borderColor: tick.color }}
+        <div className={styles.scrubber}>
+          <div
+            ref={trackRef}
+            className={styles.track}
+            role="slider"
+            tabIndex={0}
+            aria-label="Launch timeline"
+            aria-valuemin={0}
+            aria-valuemax={TICKS.length - 1}
+            aria-valuenow={active}
+            aria-valuetext={`${tick.tag} — ${tick.title}`}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onKeyDown={onKeyDown}
+          >
+            <div className={styles.trackBase} />
+            <div
+              className={clsx(styles.progress, styles[`sev_${tick.sev}`])}
+              style={{ width: `${pct}%` }}
+            />
+            {TICKS.map((tk, i) => (
+              <span
+                key={tk.t}
+                className={clsx(styles.notch, styles[`notch_${tk.sev}`])}
+                style={{ left: `${(tk.t / T_END) * 100}%` }}
+                aria-hidden="true"
               />
-              <span className={styles.tickLabel}>{tick.t}</span>
-            </div>
-          ))}
+            ))}
+            <div
+              className={clsx(styles.playhead, styles[`play_${tick.sev}`])}
+              style={{ left: `${pct}%` }}
+              aria-hidden="true"
+            />
+          </div>
+          <div className={styles.axis}>
+            <span>T+0s</span>
+            <span>self-destruct · T+39.1s</span>
+          </div>
+
+          <div className={styles.controls}>
+            <button
+              type="button"
+              className={styles.arrow}
+              onClick={() => select(active - 1)}
+              disabled={atStart}
+              aria-label="Previous event"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>Prev</span>
+            </button>
+            <span className={styles.count}>
+              {String(active + 1).padStart(2, '0')}
+              <span className={styles.countSep}> / </span>
+              {String(TICKS.length).padStart(2, '0')}
+            </span>
+            <button
+              type="button"
+              className={styles.arrow}
+              onClick={() => select(active + 1)}
+              disabled={atEnd}
+              aria-label="Next event"
+            >
+              <span>Next</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <AnimatePresence mode="wait">
-          {activeTick.label && (
-            <motion.div
-              key={activeTick.t}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2 }}
-              className={styles.detail}
-            >
-              <p className={styles.detailLabel}>{activeTick.label}</p>
-              <p className={styles.detailText}>{activeTick.detail}</p>
-            </motion.div>
-          )}
+          <motion.div
+            key={active}
+            className={clsx(styles.card, styles[`card_${tick.sev}`])}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.22 }}
+          >
+            <div className={styles.cardHead}>
+              <span className={styles.cardTag}>{tick.tag}</span>
+              <span className={clsx(styles.sevBadge, styles[`badge_${tick.sev}`])}>
+                {SEV_LABEL[tick.sev]}
+              </span>
+            </div>
+            <h3 className={styles.cardTitle}>{tick.title}</h3>
+            <p className={styles.cardDetail}>{tick.detail}</p>
+            <div className={styles.telemetry}>
+              <div className={styles.tItem}>
+                <span className={styles.tK}>Altitude</span>
+                <span className={styles.tV}>{tick.alt}</span>
+              </div>
+              <div className={styles.tItem}>
+                <span className={styles.tK}>H-Velocity</span>
+                <span className={styles.tV}>{tick.vel}</span>
+              </div>
+              <div className={styles.tItem}>
+                <span className={styles.tK}>Register</span>
+                <span className={clsx(styles.tV, styles.tMono)}>{tick.reg}</span>
+              </div>
+            </div>
+          </motion.div>
         </AnimatePresence>
       </div>
-    </section>
+    </Scene>
   );
 }

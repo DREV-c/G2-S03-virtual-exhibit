@@ -4,11 +4,9 @@ import react from '@astrojs/react';
 import icon from 'astro-icon';
 
 export default defineConfig({
-  integrations: [mdx(), react(), icon()],
+  // react() before mdx() so the React JSX runtime governs component transforms.
+  integrations: [react(), mdx(), icon()],
   site: 'https://jrgo7.github.io',
   base: 'virtual-exhibit-template',
-  vite: {
-    esbuild: { jsx: 'automatic', jsxImportSource: 'react' },
-  },
 });
 
