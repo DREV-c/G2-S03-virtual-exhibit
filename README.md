@@ -19,6 +19,7 @@ The course brief (`documents/specs.md`) requires **Node.js 26** and **Astro 6**
 (major versions). The stack below follows those requirements. Full detail and the
 reasoning live in `specs/architecture.md`.
 
+* **Runtime:** Node.js 26
 * **Framework:** Astro 6 with MDX (`@astrojs/mdx`) and React 19 (`@astrojs/react`)
 * **Styling:** Plain CSS + CSS Modules, Google Fonts (no Tailwind — Astro's own tooling covers styling)
 * **Animation & Utilities:** Framer Motion, clsx
