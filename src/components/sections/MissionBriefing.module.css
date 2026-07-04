@@ -1,0 +1,93 @@
+.section {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 6rem 1.5rem;
+  color: #fff;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+
+.body {
+  margin-top: 1rem;
+  opacity: 0.8;
+}
+
+.subheading {
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+}
+
+.track {
+  position: relative;
+  border-radius: 0.75rem;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2rem;
+}
+
+.ticks {
+  display: flex;
+  align-items: center;
+}
+
+.tickWrap {
+  position: relative;
+  flex: 1;
+}
+
+.segment {
+  height: 6px;
+}
+
+.tick {
+  position: absolute;
+  top: -6px;
+  left: 0;
+  transform: translateX(-50%);
+  height: 16px;
+  width: 16px;
+  border-radius: 999px;
+  border: 2px solid;
+  background: #0a1128;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.tickActive {
+  background: #e63946;
+}
+
+.tickLabel {
+  position: absolute;
+  top: 16px;
+  left: 0;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.detail {
+  margin-top: 3.5rem;
+  border-radius: 0.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1.25rem;
+}
+
+.detailLabel {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: #e63946;
+}
+
+.detailText {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}

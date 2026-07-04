@@ -1,13 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Archivo+Black&display=swap');
+
+:root {
+  --font-display: 'Archivo Black', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 .section {
-  scroll-margin-top: 5rem;
+  scroll-margin-top: 4.5rem; /* roughly your header's height — adjust to match */
 }
 
 body {
-  min-height: 100%;
   background: linear-gradient(
     to bottom,
     #0a1128 0%,
@@ -18,21 +35,34 @@ body {
   );
 }
 
-/* overrides (uncomment this when design is finalized) */
-/*
-.content .content__titlemeta h1,
-.content .content__titlemeta {
-  color: #ffffff;
+/* Full-bleed: strip the fixed-width column entirely */
+.content {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-.content .content__block {
-  --bg2: transparent;
-  --border: transparent;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-} */
+.content__block {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
 
-.header {
-  background: rgba(255, 255, 255, 0.92);
+.article {
+  max-width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Fold the title/author/reading-time card away entirely —
+   this info gets reintroduced inside <Hero /> instead (see below) */
+.content__titlemeta {
+  display: none !important;
 }
