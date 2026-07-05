@@ -1,3 +1,22 @@
+/* Legibility card behind the intro title + lede (specs/screens/exhibit.md ②). A
+ * low-contrast scrim — dark translucent fill + faint hairline + slight blur — so the
+ * grey lede never blends into the hull + Noise when this section's instability peaks
+ * at the late timeline. Deliberately a quiet recessed panel, not a bright box, per
+ * "the backdrop serves the UI". */
+.intro {
+  max-width: 68ch;
+  padding: var(--s3) var(--s4);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(8, 11, 20, 0.64), rgba(8, 11, 20, 0.5));
+  border: 1px solid var(--hairline);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(3px);
+}
+
+.intro > :last-child {
+  margin-bottom: 0;
+}
+
 .scrubber {
   margin-top: var(--s4);
 }
@@ -31,9 +50,12 @@
   top: 50%;
   left: 0;
   height: 4px;
-  transform: translateY(-50%);
+  width: 100%;
+  margin-top: -2px;
+  transform-origin: left center;
   border-radius: 2px;
-  transition: width var(--dur-standard) ease, background var(--dur-standard) ease;
+  /* Scale, not width — keeps the fill off the layout path. */
+  transition: transform var(--dur-standard) ease, background var(--dur-standard) ease;
 }
 .sev_ok {
   background: var(--signal-green);
@@ -149,23 +171,27 @@
 
 /* Event card */
 .card {
+  position: relative;
+  isolation: isolate;
   margin-top: var(--s4);
   min-height: 210px;
   border: 1px solid var(--hairline);
-  border-left: 3px solid var(--hairline);
   border-radius: var(--radius-lg);
-  background: linear-gradient(180deg, rgba(16, 22, 46, 0.7), rgba(11, 16, 32, 0.72));
+  background: transparent; /* metal surface (MetalSurface) provides the fill */
   padding: var(--s4);
   box-sizing: border-box;
+  transition: border-color var(--dur-standard) ease;
 }
+/* Severity tints the full border (not a left stripe); the sevBadge carries the
+ * text-backed signal so meaning never rests on colour alone. */
 .card_ok {
-  border-left-color: var(--signal-green);
+  border-color: rgba(34, 197, 94, 0.4);
 }
 .card_warn {
-  border-left-color: var(--booster-amber);
+  border-color: rgba(245, 158, 11, 0.45);
 }
 .card_bad {
-  border-left-color: var(--catastrophe-red);
+  border-color: rgba(239, 68, 68, 0.5);
 }
 
 .cardHead {

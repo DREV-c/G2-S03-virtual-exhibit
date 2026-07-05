@@ -4,11 +4,13 @@
 }
 
 .viz {
+  position: relative;
+  isolation: isolate;
   margin-top: var(--s4);
   padding: var(--s5) var(--s4);
   border-radius: var(--radius-lg);
   border: 1px solid var(--hairline);
-  background: linear-gradient(180deg, rgba(16, 22, 46, 0.7), rgba(11, 16, 32, 0.82));
+  background: transparent; /* metal surface (MetalSurface) provides the fill */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,7 +48,12 @@
 
 .counterWrap {
   font-family: var(--font-mono);
-  filter: drop-shadow(0 0 18px rgba(34, 197, 94, 0.18));
+  filter: drop-shadow(0 0 18px rgba(34, 197, 94, 0.2));
+  transition: filter var(--dur-standard) ease;
+}
+/* Glow follows the value's meaning: green nominal, red once it overflows. */
+.vizBad .counterWrap {
+  filter: drop-shadow(0 0 22px rgba(239, 68, 68, 0.32));
 }
 
 .readoutMeta {
@@ -216,7 +223,7 @@
 }
 .castType {
   font-size: 0.66rem;
-  color: rgba(201, 209, 217, 0.45);
+  color: rgba(201, 209, 217, 0.66);
 }
 
 .castArrow {
@@ -246,40 +253,110 @@
   gap: var(--s2);
 }
 
-.zones {
+/* Velocity control — a custom HUD gauge, not a stock range input. The track carries
+ * the nominal→danger zones and the +32,767 caution line; the reticle thumb and fill
+ * take the live accent (cyan nominal, red on overflow). Same native <input>, so
+ * keyboard, drag, and value semantics are unchanged. */
+.sliderWrap {
   position: relative;
-  height: 8px;
-  border-radius: 6px;
-  background: linear-gradient(
-    90deg,
-    rgba(34, 197, 94, 0.3) 0 50%,
-    rgba(239, 68, 68, 0.3) 50% 100%
-  );
+  padding-top: 22px;
 }
-.zoneMax {
+
+.threshold {
   position: absolute;
+  top: 0;
   left: 50%;
-  top: -18px;
   transform: translateX(-50%);
   font-family: var(--font-mono);
   font-size: 0.6rem;
-  color: var(--muted-silver);
+  letter-spacing: 0.08em;
+  color: var(--booster-amber);
+  white-space: nowrap;
 }
-.marker {
+.threshold::after {
+  content: '';
   position: absolute;
-  top: -3px;
-  width: 3px;
-  height: 14px;
-  border-radius: 2px;
+  left: 50%;
+  top: 100%;
+  width: 1px;
+  height: 6px;
+  background: rgba(245, 158, 11, 0.6);
   transform: translateX(-50%);
-  transition: background var(--dur-standard) ease;
 }
 
 .slider {
+  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
-  accent-color: var(--telemetry-cyan);
+  height: 30px;
+  background: transparent;
   cursor: pointer;
-  height: 24px;
+}
+
+/* Shared track background: caution line at the int16 limit, fill to current value,
+ * then the nominal / danger zone tint underneath. */
+.slider::-webkit-slider-runnable-track {
+  height: 12px;
+  border-radius: 7px;
+  border: 1px solid var(--hairline);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.55);
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1px), rgba(245, 158, 11, 0.85) calc(50% - 1px), rgba(245, 158, 11, 0.85) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(90deg, var(--sl-accent) 0 var(--pct, 0%), transparent var(--pct, 0%) 100%),
+    linear-gradient(90deg, rgba(34, 197, 94, 0.16) 0 50%, rgba(239, 68, 68, 0.18) 50% 100%);
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 26px;
+  margin-top: -7px;
+  border-radius: 4px;
+  border: 1px solid rgba(5, 6, 10, 0.85);
+  background: linear-gradient(180deg, #fff 0%, var(--sl-accent) 55%, color-mix(in srgb, var(--sl-accent) 55%, #05060a) 100%);
+  box-shadow: 0 0 0 1px var(--sl-accent), 0 0 14px 1px color-mix(in srgb, var(--sl-accent) 55%, transparent);
+  transition: box-shadow var(--dur-micro) ease;
+}
+.slider:hover::-webkit-slider-thumb {
+  box-shadow: 0 0 0 1px var(--sl-accent), 0 0 20px 3px color-mix(in srgb, var(--sl-accent) 70%, transparent);
+}
+.slider:active::-webkit-slider-thumb {
+  box-shadow: 0 0 0 1px var(--sl-accent), 0 0 26px 5px color-mix(in srgb, var(--sl-accent) 82%, transparent);
+}
+.slider:focus-visible {
+  outline: none;
+}
+.slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 2px var(--space-black), 0 0 0 4px var(--sl-accent),
+    0 0 20px 3px color-mix(in srgb, var(--sl-accent) 70%, transparent);
+}
+
+/* Firefox: native progress fill + matching track/thumb. */
+.slider::-moz-range-track {
+  height: 12px;
+  border-radius: 7px;
+  border: 1px solid var(--hairline);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.55);
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1px), rgba(245, 158, 11, 0.85) calc(50% - 1px), rgba(245, 158, 11, 0.85) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(90deg, rgba(34, 197, 94, 0.16) 0 50%, rgba(239, 68, 68, 0.18) 50% 100%);
+}
+.slider::-moz-range-progress {
+  height: 12px;
+  border-radius: 7px 0 0 7px;
+  background: var(--sl-accent);
+}
+.slider::-moz-range-thumb {
+  width: 12px;
+  height: 26px;
+  border-radius: 4px;
+  border: 1px solid rgba(5, 6, 10, 0.85);
+  background: linear-gradient(180deg, #fff 0%, var(--sl-accent) 55%, #0a1020 100%);
+  box-shadow: 0 0 0 1px var(--sl-accent), 0 0 14px 1px color-mix(in srgb, var(--sl-accent) 50%, transparent);
+  transition: box-shadow var(--dur-micro) ease;
+}
+.slider:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 2px var(--space-black), 0 0 0 4px var(--sl-accent);
 }
 
 .controlRow {
@@ -312,30 +389,6 @@
   transform: translateY(-1px);
 }
 
-.shake {
-  animation: regshake 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97);
-}
-
-@keyframes regshake {
-  10%,
-  90% {
-    transform: translateX(-2px);
-  }
-  20%,
-  80% {
-    transform: translateX(4px);
-  }
-  30%,
-  50%,
-  70% {
-    transform: translateX(-8px);
-  }
-  40%,
-  60% {
-    transform: translateX(8px);
-  }
-}
-
 @media (max-width: 640px) {
   .cast {
     grid-template-columns: 1fr;
@@ -346,7 +399,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shake,
   .pulse {
     animation: none;
   }

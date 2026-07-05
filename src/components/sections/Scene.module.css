@@ -1,7 +1,9 @@
 .scene {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  /* Fill the deck pane (specs/behaviors/scene-deck.md). svh so mobile URL-bar chrome
+   * doesn't force a phantom inner scroll. */
+  min-height: 100svh;
   display: flex;
   align-items: center;
   padding: var(--s8) var(--s3);
@@ -23,18 +25,9 @@
   gap: var(--s2);
   margin-bottom: var(--s3);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--muted-silver);
-}
-
-.index {
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
   color: var(--telemetry-cyan);
-  border: 1px solid var(--hairline-strong);
-  border-radius: 6px;
-  padding: 3px 8px;
-  font-weight: 500;
 }
 
 .rule {

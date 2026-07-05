@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import FuzzyText from '../reactbits/FuzzyText.jsx';
 import Scene, { sceneStyles } from './Scene.jsx';
 import { useExhibit } from '../exhibit/ExhibitState.jsx';
+import MetalSurface from '../exhibit/MetalSurface.jsx';
 import styles from './DualSRIFailure.module.css';
 
 const STEPS = [
@@ -30,6 +31,7 @@ function Panel({ which, step, mirror, reducedMotion }) {
   const name = `SRI ${which}`;
   return (
     <div className={clsx(styles.panel, styles[`p_${st}`], mirror && styles.mirror)}>
+      <MetalSurface />
       <div className={styles.panelHead}>
         <span className={clsx(styles.light, styles[`light_${st}`])} />
         <span className={styles.panelName}>{name}</span>
@@ -73,7 +75,7 @@ export default function DualSRIFailure() {
   };
 
   return (
-    <Scene id="dual-sri" index="05" kicker="Dual SRI · the redundancy paradox">
+    <Scene id="dual-sri" kicker="The redundancy paradox — fifty milliseconds apart">
       <h2 className={sceneStyles.title}>Two computers, one bug</h2>
       <p className={sceneStyles.lede}>
         The Ariane 5 carried two inertial reference systems so that if one failed, the
@@ -93,7 +95,7 @@ export default function DualSRIFailure() {
                 <span className={styles.busDiagStatic}>0x8B7E · diag?</span>
               ) : (
                 <FuzzyText
-                  fontFamily='"JetBrains Mono", monospace'
+                  fontFamily='"Spline Sans Mono", monospace'
                   fontSize={18}
                   fontWeight={500}
                   color="#F59E0B"

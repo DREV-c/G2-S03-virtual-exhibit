@@ -45,10 +45,29 @@
   flex-direction: column;
   border-radius: 18px;
   box-sizing: border-box;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Brushed-metal grain over both faces so the cards read as the same material as the
+   other panels (specs/behaviors/metallic-surface.md). The BorderGlow effect itself
+   is untouched — this only recolours the card surfaces. */
+.face::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1; /* behind the card content, above its background — keeps text crisp */
+  pointer-events: none;
+  opacity: 0.32;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 .front {
   justify-content: flex-start;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 46%, rgba(255, 255, 255, 0.05)),
+    linear-gradient(160deg, color-mix(in srgb, var(--hull-panel-light) 55%, transparent), color-mix(in srgb, var(--hull-panel-dark) 60%, transparent));
 }
 
 .num {
@@ -81,8 +100,10 @@
 .back {
   transform: rotateY(180deg);
   justify-content: center;
-  background: linear-gradient(160deg, rgba(34, 211, 238, 0.06), rgba(11, 16, 32, 0.2));
-  border: 1px solid rgba(34, 211, 238, 0.18);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 46%, rgba(255, 255, 255, 0.04)),
+    linear-gradient(160deg, rgba(34, 211, 238, 0.1), color-mix(in srgb, var(--hull-panel-dark) 62%, transparent));
+  border: 1px solid rgba(34, 211, 238, 0.2);
 }
 .backKicker {
   font-family: var(--font-mono);

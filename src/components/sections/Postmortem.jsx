@@ -54,7 +54,7 @@ function FlipCard({ card, reducedMotion }) {
 export default function Postmortem() {
   const { reducedMotion } = useExhibit();
   return (
-    <Scene id="postmortem" index="06" kicker="Postmortem · what the wreckage taught">
+    <Scene id="postmortem">
       <h2 className={sceneStyles.title}>Six lessons from 37 seconds</h2>
       <p className={sceneStyles.lede}>
         The board of inquiry found no villain — only a chain of reasonable decisions
@@ -67,7 +67,7 @@ export default function Postmortem() {
           <BorderGlow
             key={c.n}
             colors={['#22D3EE', '#F59E0B', '#EF4444']}
-            backgroundColor="#0B1020"
+            backgroundColor="#33363c"
             glowColor="187 83 53"
             borderRadius={18}
             glowIntensity={0.9}

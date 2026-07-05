@@ -1,4 +1,10 @@
-import { createContext, useContext, useMemo, useRef } from 'react';
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useRef,
+  useEffect,
+} from 'react';
 import {
   useMotionValue,
   useTransform,
@@ -8,33 +14,53 @@ import {
 
 /**
  * One instability value drives everything (specs/principles.md).
- * The master `instability` in [0,1] = max(scroll-driven ambient, event-driven).
+ * The master `instability` in [0,1] = max(ambient scene-driven, event-driven).
  * Consumers subscribe to motion values directly, so rapid changes (slider, scrub)
  * never re-render the section canvases.
  */
 const ExhibitContext = createContext(null);
 
-// Ambient instability as a function of whole-page scroll progress: calm through the
-// intro, rising into the Register Room / SRI failure, then down to 0 at Postmortem
-// (clean black calm). The big spike at the wrap is event-driven, not scroll-driven.
-const SCROLL_IN = [0, 0.28, 0.5, 0.62, 0.72, 0.82, 0.92, 1];
-const SCROLL_OUT = [0.04, 0.1, 0.3, 0.55, 0.62, 0.45, 0.1, 0];
+// Ambient instability per scene index — the deck (specs/behaviors/scene-deck.md) is
+// now the ambient driver, replacing the old scroll map. Same curve *shape*: calm
+// intro, rising into Register Room / SRI, back to 0 (clean black calm) at Postmortem.
+// The big spike at the wrap and the timeline scrub are event-driven, layered on top.
+// Order matches SCENES: Launch, Mission Briefing, About Binary, Register Room,
+// Dual-SRI, Postmortem.
+const SCENE_INSTABILITY = [0.04, 0.1, 0.16, 0.55, 0.62, 0.0];
 
-export function ExhibitProvider({ scrollYProgress, children }) {
+export function ExhibitProvider({ activeIndex = 0, children }) {
   const prefersReduced = useReducedMotion();
 
-  // Fallback scroll source for SSR / when no target is bound yet.
-  const fallback = useMotionValue(0);
-  const scroll = scrollYProgress ?? fallback;
-
-  const scrollInstability = useTransform(scroll, SCROLL_IN, SCROLL_OUT, {
-    clamp: true,
-  });
+  // Ambient channel: a motion value eased toward the active scene's target on each
+  // scene change (snapped under reduced motion).
+  const sceneInstability = useMotionValue(SCENE_INSTABILITY[0]);
   const eventInstability = useMotionValue(0);
   const instability = useTransform(
-    [scrollInstability, eventInstability],
+    [sceneInstability, eventInstability],
     ([a, b]) => Math.max(a, b)
   );
+
+  const ambientAnim = useRef(null);
+  useEffect(() => {
+    const target = SCENE_INSTABILITY[activeIndex] ?? 0;
+    if (ambientAnim.current) {
+      ambientAnim.current.stop();
+      ambientAnim.current = null;
+    }
+    if (prefersReduced) {
+      // Designed reduced-motion path: snap ambient, no eased escalation.
+      sceneInstability.set(target);
+      return undefined;
+    }
+    ambientAnim.current = animate(sceneInstability, target, {
+      duration: 0.7,
+      ease: [0.4, 0, 0.2, 1],
+    });
+    return () => {
+      ambientAnim.current?.stop();
+      ambientAnim.current = null;
+    };
+  }, [activeIndex, prefersReduced, sceneInstability]);
 
   // Live register snapshot as a motion value (velocity 0..65535). The HUD subscribes
   // without forcing provider re-renders.
@@ -52,10 +78,11 @@ export function ExhibitProvider({ scrollYProgress, children }) {
 
     return {
       instability,
-      scrollInstability,
+      // Kept under the old name so subscribers (HUD, sections) are unchanged; it is
+      // now the scene-driven ambient channel, not a scroll transform.
+      scrollInstability: sceneInstability,
       eventInstability,
       velocityMV,
-      scroll,
       reducedMotion: !!prefersReduced,
 
       /** Transient overflow spike: jump to `peak`, decay to 0 over `duration` s. */
@@ -103,14 +130,7 @@ export function ExhibitProvider({ scrollYProgress, children }) {
         });
       },
     };
-  }, [
-    instability,
-    scrollInstability,
-    eventInstability,
-    velocityMV,
-    scroll,
-    prefersReduced,
-  ]);
+  }, [instability, sceneInstability, eventInstability, velocityMV, prefersReduced]);
 
   return (
     <ExhibitContext.Provider value={value}>{children}</ExhibitContext.Provider>

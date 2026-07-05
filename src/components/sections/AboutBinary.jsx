@@ -45,7 +45,7 @@ export default function AboutBinary() {
   const hex = '0x' + unsigned.toString(16).toUpperCase().padStart(2, '0');
 
   return (
-    <Scene id="about-binary" index="03" kicker="Binary Basics · how machines hold a number">
+    <Scene id="about-binary">
       <h2 className={sceneStyles.title}>How a computer holds a number</h2>
       <p className={sceneStyles.lede}>
         Before the rocket, the fundamentals. A register is just a fixed row of bits,

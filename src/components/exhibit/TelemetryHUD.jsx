@@ -3,21 +3,22 @@ import { motion, useTransform, useMotionValueEvent } from 'framer-motion';
 import { useExhibit } from './ExhibitState.jsx';
 import { SCENES } from './scenes.js';
 import { toSigned16, hex16 } from './registerMath.js';
+import MetalSurface from './MetalSurface.jsx';
 import styles from './TelemetryHUD.module.css';
 
 // Persistent instrument console: scene + mission clock, live register snapshot, and
 // a SYSTEM INTEGRITY meter fed by the one instability value (specs/screens/exhibit.md).
-export default function TelemetryHUD({ activeIndex = 0 }) {
-  const { instability, velocityMV, scroll } = useExhibit();
+export default function TelemetryHUD({ activeIndex = 0, onNavigate }) {
+  const { instability, velocityMV } = useExhibit();
 
-  const [clock, setClock] = useState('T+00.0s');
   const [vel, setVel] = useState(0);
   const [pct, setPct] = useState(100);
 
-  useMotionValueEvent(scroll, 'change', (v) => {
-    const t = Math.max(0, Math.min(39.1, v * 39.1));
-    setClock('T+' + t.toFixed(1).padStart(4, '0') + 's');
-  });
+  // The mission clock reads the active scene's nominal T+ (the deck replaced the
+  // scroll-derived clock — specs/behaviors/scene-deck.md).
+  const sceneT = (SCENES[activeIndex] ?? SCENES[0]).t ?? 0;
+  const clock = 'T+' + sceneT.toFixed(1).padStart(4, '0') + 's';
+
   useMotionValueEvent(velocityMV, 'change', (v) =>
     setVel((prev) => (prev === Math.round(v) ? prev : Math.round(v)))
   );
@@ -36,13 +37,12 @@ export default function TelemetryHUD({ activeIndex = 0 }) {
   const signed = toSigned16(vel);
   const scene = SCENES[activeIndex] ?? SCENES[0];
 
-  const go = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
+  // Nav dots transition the deck to a scene (specs/behaviors/scene-deck.md).
+  const go = (i) => onNavigate?.(i);
 
   return (
     <div className={styles.hud} role="region" aria-label="Mission telemetry">
+      <MetalSurface style={{ '--metal-grain': 0.24, '--metal-sheen': 0.4, '--metal-back-blur': '10px' }} />
       <div className={styles.cell}>
         <span className={styles.k}>Scene {String(activeIndex + 1).padStart(2, '0')}</span>
         <span className={styles.scene}>{scene.name}</span>
@@ -75,7 +75,7 @@ export default function TelemetryHUD({ activeIndex = 0 }) {
               key={s.id}
               type="button"
               className={`${styles.dot} ${i === activeIndex ? styles.dotActive : ''}`}
-              onClick={() => go(s.id)}
+              onClick={() => go(i)}
               aria-label={`Go to ${s.name}`}
               aria-current={i === activeIndex ? 'true' : undefined}
             />

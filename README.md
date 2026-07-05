@@ -95,11 +95,6 @@ Telemetry Cyan \#22D3EE: live data and accents
 Booster Amber \#F59E0B: warnings and the sign bit  
 Catastrophe Red \#EF4444 : overflow and failure states  
 Signal Green \#22C55E: nominal status  
-   
-**Typography**  
-Display: Space Grotesk for scene titles and headings  
-Body: Inter for descriptive copy  
-Mono: JetBrains Mono for register values and hex / decimal readouts
 
 **Motion language**  
 Durations: micro 120ms, standard 300ms, scene 600 ms, cinematic 1200ms.  

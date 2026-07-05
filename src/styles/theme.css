@@ -3,7 +3,12 @@
  * of the locked layout chrome so the exhibit renders full-bleed on Space Black.
  * See specs/screens/exhibit.md. Does NOT modify layouts/ or global.css. */
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+/* Typography — forensic / engineered / ominous. A mission-control console meets an
+ * accident-inquiry report. Chakra Petch (mechanical instrument-panel display) +
+ * Public Sans (the USWDS government-report grotesque, body) + Spline Sans Mono
+ * (telemetry / register readouts). Deliberately off the overused Space Grotesk /
+ * Inter / JetBrains Mono triad. Google Fonts only (per specs/architecture.md). */
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;700&display=swap');
 
 :root {
   /* Palette (spec style guide — law) */
@@ -15,6 +20,18 @@
   --catastrophe-red: #ef4444;
   --signal-green: #22c55e;
 
+  /* Weathered-hull base palette (specs/behaviors/hull-backdrop.md). Grays are the
+   * neutral backdrop base; the semantic accents above stay the failure colours.
+   * Hull-hazard is a painted-surface amber, distinct from interactive booster-amber. */
+  --hull-fill: #2f3234;
+  --hull-panel-light: #4b4d50;
+  --hull-panel-dark: #353739;
+  --hull-seam: #242628;
+  --hull-rust: #965b36;
+  --hull-scorch: #1f1b18;
+  --hull-smoke: #5f615d;
+  --hull-hazard: #d39c2d;
+
   /* Derived surfaces */
   --surface: #0b1020;
   --surface-2: #10162e;
@@ -23,9 +40,9 @@
   --muted-silver: rgba(201, 209, 217, 0.62);
 
   /* Typography */
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-display: 'Chakra Petch', system-ui, sans-serif;
+  --font-body: 'Public Sans', system-ui, sans-serif;
+  --font-mono: 'Spline Sans Mono', ui-monospace, monospace;
 
   /* Spacing scale (8px base) */
   --s1: 8px;
@@ -55,6 +72,10 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100%;
+  /* The exhibit is a full-viewport scene deck (specs/behaviors/scene-deck.md): no
+   * free page-scroll. theme.css loads only on the exhibit route, so this does not
+   * affect the homepage. */
+  overflow: hidden;
 }
 
 html {
@@ -64,7 +85,8 @@ html {
 body {
   font-family: var(--font-body);
   color: var(--ariane-silver);
-  background: var(--space-black);
+  /* Hull base shows behind the fixed backdrop (specs/behaviors/hull-backdrop.md). */
+  background: var(--hull-fill);
   /* Reserve space for the fixed bottom Telemetry HUD so the footer clears it. */
   padding-bottom: var(--hud-h);
 }
@@ -153,6 +175,13 @@ body {
 /* ---- Restyle (not restructure) the leftover layout header + footer dark ---- */
 
 .header {
+  /* Fixed chrome overlaying the deck's top edge (mirrors the fixed bottom HUD) so the
+   * full-viewport scene stage starts at y=0 — specs/behaviors/scene-deck.md. */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
   background: rgba(5, 6, 10, 0.7);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--hairline);

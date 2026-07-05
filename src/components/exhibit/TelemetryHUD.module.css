@@ -10,8 +10,8 @@
   align-items: center;
   gap: var(--s3);
   padding: 0 var(--s3);
-  background: rgba(5, 6, 10, 0.82);
-  backdrop-filter: blur(10px);
+  isolation: isolate;
+  background: transparent; /* metal surface (MetalSurface) provides the gunmetal fill */
   border-top: 1px solid var(--hairline-strong);
   font-family: var(--font-mono);
   color: var(--ariane-silver);

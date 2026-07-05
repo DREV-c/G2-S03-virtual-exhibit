@@ -1,5 +1,10 @@
 ---
-layout: '../layouts/HomepageLayout.astro'
+# Interim Astro-6 homepage: the instructor's HomepageLayout.astro calls the removed
+# Astro.glob() and cannot build (documents/escalation-astro-glob.md). This compat
+# copy is identical except for the one-line glob fix. Revert to
+# '../layouts/HomepageLayout.astro' when the template is fixed upstream.
+# See plans/homepage-astro-glob-blocker.md.
+layout: '../components/HomepageLayoutCompat.astro'
 title: "Computer Architecture is Forever"
 ---
 

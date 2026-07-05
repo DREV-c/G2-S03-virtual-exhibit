@@ -7,6 +7,11 @@
   display: flex;
   overflow: hidden;
   line-height: 1;
+  /* Fade the odometer edges with a true alpha mask, not a colour-matched overlay,
+   * so digits dissolve to real transparency over any background (the surface here
+   * is a translucent gradient, not a solid the overlay could ever match). */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%);
 }
 
 .counter-digit {
@@ -33,6 +38,12 @@
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+.top-gradient {
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
 
 .bottom-gradient {

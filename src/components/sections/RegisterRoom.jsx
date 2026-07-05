@@ -5,6 +5,7 @@ import Counter from '../reactbits/Counter.jsx';
 import FuzzyText from '../reactbits/FuzzyText.jsx';
 import Scene, { sceneStyles } from './Scene.jsx';
 import { useExhibit } from '../exhibit/ExhibitState.jsx';
+import MetalSurface from '../exhibit/MetalSurface.jsx';
 import {
   pattern16,
   toSigned16,
@@ -49,7 +50,6 @@ function BitCell({ bit, isSign, overflowed, reducedMotion }) {
 export default function RegisterRoom() {
   const { velocityMV, spike, reducedMotion } = useExhibit();
   const [velocity, setVelocity] = useState(0);
-  const [shaking, setShaking] = useState(false);
   const prevOverflow = useRef(false);
   const driver = useMotionValue(0);
   const replayRef = useRef(null);
@@ -71,20 +71,15 @@ export default function RegisterRoom() {
     [velocityMV]
   );
 
-  // Fire the overflow wrap exactly on the low->high sign-bit crossing.
+  // Fire the overflow wrap exactly on the low->high sign-bit crossing. The wrap reads
+  // through the red wash / Noise spike / colour flip — no panel shake (spec ①).
   useEffect(() => {
     const of = pattern16(velocity) >= 32768;
     if (of && !prevOverflow.current) {
       spike(1, 0.8);
-      if (!reducedMotion) {
-        setShaking(true);
-        const t = setTimeout(() => setShaking(false), 800);
-        prevOverflow.current = of;
-        return () => clearTimeout(t);
-      }
     }
     prevOverflow.current = of;
-  }, [velocity, spike, reducedMotion]);
+  }, [velocity, spike]);
 
   const stopReplay = useCallback(() => {
     if (replayRef.current) {
@@ -128,11 +123,7 @@ export default function RegisterRoom() {
   const pct = (velocity / 65535) * 100;
 
   return (
-    <Scene
-      id="register-room"
-      index="04"
-      kicker="Register Room · SRI horizontal velocity"
-    >
+    <Scene id="register-room">
       <h2 className={sceneStyles.title}>One register, two meanings</h2>
       <p className={sceneStyles.lede}>
         The SRI stored horizontal velocity as a 64-bit float, then cast it into a
@@ -143,12 +134,9 @@ export default function RegisterRoom() {
       </p>
 
       <div
-        className={clsx(
-          styles.viz,
-          overflowed && styles.vizBad,
-          shaking && styles.shake
-        )}
+        className={clsx(styles.viz, overflowed && styles.vizBad)}
       >
+        <MetalSurface />
         <div className={styles.readout}>
           <span
             className={clsx(styles.sign, overflowed ? styles.signNeg : styles.signPos)}
@@ -165,9 +153,9 @@ export default function RegisterRoom() {
               horizontalPadding={0}
               fontWeight={700}
               textColor={overflowed ? '#EF4444' : '#22C55E'}
-              gradientFrom="#0B1020"
+              gradientFrom="transparent"
               gradientTo="transparent"
-              gradientHeight={22}
+              gradientHeight={0}
             />
           </div>
           <span className="sr-only">Signed 16-bit value: {signed}</span>
@@ -179,7 +167,7 @@ export default function RegisterRoom() {
                 <span className={styles.overflowStatic}>OVERFLOW</span>
               ) : (
                 <FuzzyText
-                  fontFamily='"Space Grotesk", sans-serif'
+                  fontFamily='"Chakra Petch", sans-serif'
                   fontSize="clamp(1.3rem, 3.4vw, 2rem)"
                   fontWeight={700}
                   color="#EF4444"
@@ -248,24 +236,23 @@ export default function RegisterRoom() {
         </div>
 
         <div className={styles.control}>
-          <div className={styles.zones} aria-hidden="true">
-            <span className={styles.zoneMax}>+32,767</span>
-            <span
-              className={styles.marker}
-              style={{ left: `${pct}%`, background: overflowed ? '#EF4444' : '#22C55E' }}
+          <div className={styles.sliderWrap}>
+            <input
+              className={styles.slider}
+              type="range"
+              min="0"
+              max="65535"
+              step="1"
+              value={velocity}
+              onChange={onSlider}
+              style={{ '--pct': `${pct}%`, '--sl-accent': overflowed ? '#ef4444' : '#22d3ee' }}
+              aria-label="Horizontal velocity (feeds the 16-bit register)"
+              aria-valuetext={`${velocity}, signed ${signed}`}
             />
+            <span className={styles.threshold} aria-hidden="true">
+              int16 limit · +32,767
+            </span>
           </div>
-          <input
-            className={styles.slider}
-            type="range"
-            min="0"
-            max="65535"
-            step="1"
-            value={velocity}
-            onChange={onSlider}
-            aria-label="Horizontal velocity (feeds the 16-bit register)"
-            aria-valuetext={`${velocity}, signed ${signed}`}
-          />
           <div className={styles.controlRow}>
             <span className={styles.controlHint}>
               Horizontal velocity — {velocity.toLocaleString()}

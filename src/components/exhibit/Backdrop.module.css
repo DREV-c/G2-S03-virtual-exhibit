@@ -11,11 +11,16 @@
   inset: 0;
 }
 
-/* Static base: dark throughout, a faint cyan telemetry glow up top (calm). */
-.base {
+/* Hull phase — opacity crossfades in on descent (specs/behaviors/hull-backdrop.md). */
+.hullWrap {
+  position: absolute;
+  inset: 0;
+}
+
+/* Launch phase — space void + StarField, fades out on descent. */
+.space {
   background:
-    radial-gradient(120% 80% at 50% -10%, rgba(34, 211, 238, 0.12), transparent 55%),
-    linear-gradient(180deg, #070912 0%, var(--deep-void) 34%, var(--space-black) 100%);
+    radial-gradient(120% 90% at 50% 15%, #0a0f1f 0%, var(--space-black) 60%, #030409 100%);
 }
 
 /* Amber "warning" heat bloom — peaks mid-descent. */
@@ -28,11 +33,6 @@
 .red {
   background:
     radial-gradient(80% 70% at 50% 60%, rgba(239, 68, 68, 0.6), transparent 62%);
-}
-
-.stars {
-  position: absolute;
-  inset: 0;
 }
 
 /* Red wash / vignette at the failure beats. */

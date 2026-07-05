@@ -1,16 +1,17 @@
 import clsx from 'clsx';
 import styles from './Scene.module.css';
 
-// Shared scene shell. The numbered kicker is a real sequence marker — the exhibit is
-// a typed mission timeline — so the numbering carries information, not decoration.
-export default function Scene({ id, index, kicker, className, innerClassName, children }) {
+// Shared scene shell. `kicker` is optional and reserved for the two sections that are
+// genuinely a sequence (the launch timeline, the failure cascade); concept sections let
+// their H2 lead. It reads as a quiet station-log line, deliberately NOT a tracked-caps
+// eyebrow repeated over every heading.
+export default function Scene({ id, kicker, className, innerClassName, children }) {
   return (
     <section id={id} className={clsx(styles.scene, className)}>
       <div className={clsx(styles.inner, innerClassName)}>
-        {(index || kicker) && (
+        {kicker && (
           <div className={styles.kicker}>
-            {index && <span className={styles.index}>{index}</span>}
-            {kicker && <span>{kicker}</span>}
+            <span>{kicker}</span>
             <span className={styles.rule} />
           </div>
         )}

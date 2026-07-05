@@ -23,7 +23,7 @@ export default function Launch() {
           </div>
         ) : (
           <FuzzyText
-            fontFamily='"Space Grotesk", sans-serif'
+            fontFamily='"Chakra Petch", sans-serif'
             fontSize="clamp(2rem, 9vw, 6.5rem)"
             fontWeight={700}
             baseIntensity={0.14}
@@ -67,7 +67,7 @@ export default function Launch() {
         animate={reducedMotion ? undefined : { y: [0, 7, 0] }}
         transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <span>scroll</span>
+        <span>descend</span>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>

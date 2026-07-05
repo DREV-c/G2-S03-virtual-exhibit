@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import Scene, { sceneStyles } from './Scene.jsx';
 import { useExhibit } from '../exhibit/ExhibitState.jsx';
+import MetalSurface from '../exhibit/MetalSurface.jsx';
 import styles from './MissionBriefing.module.css';
 
 const T_END = 39.1;
@@ -114,14 +115,18 @@ export default function MissionBriefing() {
   };
 
   return (
-    <Scene id="mission-briefing" index="02" kicker="Mission Briefing · Flight V88 timeline">
+    <Scene id="mission-briefing" kicker="Flight V88 — the last thirty-nine seconds">
       <div ref={wrapRef}>
-        <h2 className={sceneStyles.title}>Thirty-nine seconds</h2>
-        <p className={sceneStyles.lede}>
-          Step through the launch timeline. Nothing looks wrong until T+36.7s — then
-          the same fault takes both computers in fifty milliseconds. Move past the
-          fault and the whole instrument starts to come apart with you.
-        </p>
+        {/* Legibility card: keeps the grey lede readable when this section's noise
+            peaks at the late timeline (specs/screens/exhibit.md ②). */}
+        <div className={styles.intro}>
+          <h2 className={sceneStyles.title}>Thirty-nine seconds</h2>
+          <p className={sceneStyles.lede}>
+            Step through the launch timeline. Nothing looks wrong until T+36.7s — then
+            the same fault takes both computers in fifty milliseconds. Move past the
+            fault and the whole instrument starts to come apart with you.
+          </p>
+        </div>
 
         <div className={styles.scrubber}>
           <div
@@ -142,7 +147,7 @@ export default function MissionBriefing() {
             <div className={styles.trackBase} />
             <div
               className={clsx(styles.progress, styles[`sev_${tick.sev}`])}
-              style={{ width: `${pct}%` }}
+              style={{ transform: `scaleX(${pct / 100})` }}
             />
             {TICKS.map((tk, i) => (
               <span
@@ -205,6 +210,7 @@ export default function MissionBriefing() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.22 }}
           >
+            <MetalSurface />
             <div className={styles.cardHead}>
               <span className={styles.cardTag}>{tick.tag}</span>
               <span className={clsx(styles.sevBadge, styles[`badge_${tick.sev}`])}>
