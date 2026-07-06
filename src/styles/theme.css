@@ -10,6 +10,18 @@
  * Inter / JetBrains Mono triad. Google Fonts only (per specs/architecture.md). */
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;700&display=swap');
 
+/* 7-segment LCD display font for numeric readouts (Counter odometer, register
+ * hex/decimal, HUD telemetry values, SRI numeric readouts). Lives in public/
+ * so Vite never tries to verify the asset at build time. Labels, tags, hints,
+ * and body copy stay on --font-mono. */
+@font-face {
+  font-family: 'DS-Digital';
+  src: url('/virtual-exhibit-template/fonts/DS-DIGI.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 *,
 *::before,
 *::after {
@@ -56,6 +68,7 @@
   --font-display: 'Chakra Petch', system-ui, sans-serif;
   --font-body: 'Public Sans', system-ui, sans-serif;
   --font-mono: 'Spline Sans Mono', ui-monospace, monospace;
+  --font-lcd: 'DS-Digital', 'Spline Sans Mono', ui-monospace, monospace;
 
   /* Spacing scale (8px base) */
   --s1: 8px;

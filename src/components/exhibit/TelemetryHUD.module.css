@@ -59,12 +59,14 @@
 }
 
 .hex {
+  font-family: var(--font-lcd);
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.02em;
 }
 
 .dec {
+  font-family: var(--font-lcd);
   font-size: 0.78rem;
 }
 

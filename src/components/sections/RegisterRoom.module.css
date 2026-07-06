@@ -51,7 +51,7 @@
 }
 
 .sign {
-  font-family: var(--font-mono);
+  font-family: var(--font-lcd);
   font-size: clamp(2rem, 6vh, 3.4rem);
   font-weight: 700;
   line-height: 1;
@@ -85,7 +85,7 @@
 }
 
 .hex {
-  font-family: var(--font-mono);
+  font-family: var(--font-lcd);
   font-size: 1rem;
   color: var(--muted-silver);
   letter-spacing: 0.04em;
@@ -228,7 +228,7 @@
   color: var(--muted-silver);
 }
 .castValue {
-  font-family: var(--font-mono);
+  font-family: var(--font-lcd);
   font-size: 1.3rem;
   font-weight: 700;
   color: var(--text-bright);
