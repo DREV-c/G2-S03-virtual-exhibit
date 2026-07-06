@@ -45,11 +45,7 @@
   text-overflow: ellipsis;
 }
 
-.clock {
-  font-size: 0.72rem;
-  color: var(--muted-silver);
-  white-space: nowrap;
-}
+
 
 /* Center register readout */
 .register {
@@ -79,27 +75,7 @@
   color: var(--catastrophe-red);
 }
 
-/* Integrity meter */
-.meter {
-  position: relative;
-  width: clamp(70px, 12vw, 160px);
-  height: 8px;
-  border-radius: 6px;
-  background: rgba(201, 209, 217, 0.16);
-  overflow: hidden;
-}
 
-.meterFill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  border-radius: 6px;
-}
-
-.pct {
-  font-size: 0.72rem;
-  width: 3.2ch;
-  text-align: right;
-}
 
 /* Scene-nav dots */
 .dots {
@@ -144,7 +120,6 @@
   .center {
     display: none;
   }
-  .clock,
   .dots {
     display: none;
   }

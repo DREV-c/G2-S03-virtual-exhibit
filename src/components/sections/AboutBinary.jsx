@@ -46,12 +46,14 @@ export default function AboutBinary() {
 
   return (
     <Scene id="about-binary">
-      <h2 className={sceneStyles.title}>How a computer holds a number</h2>
-      <p className={sceneStyles.lede}>
-        Before the rocket, the fundamentals. A register is just a fixed row of bits,
-        and the way those bits are read decides whether a pattern means a big positive
-        number or a big negative one.
-      </p>
+      <div className={styles.intro}>
+        <h2 className={sceneStyles.title}>How a computer holds a number</h2>
+        <p className={sceneStyles.lede}>
+          Before the rocket, the fundamentals. A register is just a fixed row of bits,
+          and the way those bits are read decides whether a pattern means a big positive
+          number or a big negative one.
+        </p>
+      </div>
 
       <div className={styles.concepts}>
         {CONCEPTS.map((c) => (

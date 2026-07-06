@@ -1,27 +1,45 @@
+.intro {
+  max-width: 68ch;
+  padding: clamp(var(--s2), 2vh, var(--s3)) clamp(var(--s3), 3vw, var(--s4));
+  border-radius: var(--radius-lg);
+  background: var(--card-bg);
+  border: var(--card-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: var(--card-blur);
+  -webkit-backdrop-filter: var(--card-blur);
+  margin-bottom: clamp(var(--s2), 2.5vh, var(--s4));
+}
+
+.intro > :last-child {
+  margin-bottom: 0;
+}
+
 .concepts {
   display: grid;
-  gap: var(--s3);
+  gap: clamp(var(--s2), 2vh, var(--s3));
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-  margin-bottom: var(--s5);
+  margin-bottom: clamp(var(--s2), 3vh, var(--s4));
 }
 
 .concept {
-  padding: var(--s3);
+  padding: clamp(var(--s2), 1.8vh, var(--s3));
   border-radius: var(--radius);
-  border: 1px solid var(--hairline);
-  background: rgba(11, 16, 32, 0.5);
+  border: var(--card-border);
+  background: var(--card-bg);
+  backdrop-filter: var(--card-blur);
+  -webkit-backdrop-filter: var(--card-blur);
 }
 .conceptK {
   font-family: var(--font-display);
-  font-size: 1.02rem;
+  font-size: clamp(0.9rem, 1.8vh, 1.02rem);
   color: var(--telemetry-cyan);
   margin: 0 0 var(--s1);
 }
 .conceptB {
   margin: 0;
   color: var(--muted-silver);
-  font-size: 0.92rem;
-  line-height: 1.58;
+  font-size: clamp(0.78rem, 1.6vh, 0.92rem);
+  line-height: 1.5;
 }
 .conceptB code {
   font-family: var(--font-mono);
@@ -31,14 +49,17 @@
   border-radius: 4px;
 }
 .conceptB strong {
-  color: #eef2f6;
+  color: var(--text-bright);
 }
 
 .lab {
-  border: 1px solid var(--hairline);
+  border: var(--card-border);
   border-radius: var(--radius-lg);
-  background: linear-gradient(180deg, rgba(16, 22, 46, 0.7), rgba(11, 16, 32, 0.78));
-  padding: var(--s4);
+  background: var(--card-bg);
+  backdrop-filter: var(--card-blur);
+  -webkit-backdrop-filter: var(--card-blur);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  padding: clamp(var(--s2), 2.2vh, var(--s3)) clamp(var(--s3), 3vw, var(--s4));
 }
 
 .labHead {
@@ -52,7 +73,7 @@
 .labTitle {
   font-family: var(--font-display);
   font-size: 1.05rem;
-  color: #eef2f6;
+  color: var(--text-bright);
 }
 .labHint {
   font-family: var(--font-mono);
@@ -80,13 +101,13 @@
 
 .bit {
   font-family: var(--font-mono);
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2vh, 1.2rem);
   font-weight: 600;
-  width: clamp(2rem, 8vw, 3rem);
-  height: clamp(2.6rem, 9vw, 3.6rem);
+  width: clamp(1.8rem, 4vw, 2.5rem);
+  height: clamp(2.2rem, 6vh, 3.2rem);
   border-radius: 10px;
   border: 1px solid var(--hairline);
-  background: rgba(5, 6, 10, 0.5);
+  background: var(--bg-dark-scrim);
   color: rgba(201, 209, 217, 0.5);
   cursor: pointer;
   transition: all var(--dur-micro) ease;
@@ -114,7 +135,7 @@
   display: flex;
   gap: var(--s5);
   justify-content: center;
-  margin-top: var(--s4);
+  margin-top: clamp(var(--s2), 2vh, var(--s3));
   flex-wrap: wrap;
 }
 .ro {
@@ -132,9 +153,9 @@
 }
 .roV {
   font-family: var(--font-mono);
-  font-size: 1.5rem;
+  font-size: clamp(1.1rem, 3vh, 1.5rem);
   font-weight: 700;
-  color: #eef2f6;
+  color: var(--text-bright);
 }
 .pos {
   color: var(--signal-green);

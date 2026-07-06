@@ -1,3 +1,19 @@
+.intro {
+  max-width: 68ch;
+  padding: clamp(var(--s2), 2vh, var(--s3)) clamp(var(--s3), 3vw, var(--s4));
+  border-radius: var(--radius-lg);
+  background: var(--card-bg);
+  border: var(--card-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: var(--card-blur);
+  -webkit-backdrop-filter: var(--card-blur);
+  margin-bottom: clamp(var(--s2), 2.5vh, var(--s4));
+}
+
+.intro > :last-child {
+  margin-bottom: 0;
+}
+
 .inlineMono {
   font-family: var(--font-mono);
   color: var(--signal-green);
@@ -6,20 +22,22 @@
 .viz {
   position: relative;
   isolation: isolate;
-  margin-top: var(--s4);
-  padding: var(--s5) var(--s4);
+  margin-top: clamp(var(--s2), 2.5vh, var(--s4));
+  padding: clamp(var(--s2), 3vh, var(--s4)) clamp(var(--s3), 3vw, var(--s4));
   border-radius: var(--radius-lg);
-  border: 1px solid var(--hairline);
-  background: transparent; /* metal surface (MetalSurface) provides the fill */
+  border: var(--card-border);
+  background: var(--card-bg);
+  backdrop-filter: var(--card-blur);
+  -webkit-backdrop-filter: var(--card-blur);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--s4);
+  gap: clamp(var(--s1), 2vh, var(--s3));
   transition: border-color var(--dur-standard) ease, box-shadow var(--dur-standard) ease;
 }
 
 .vizBad {
-  border-color: rgba(239, 68, 68, 0.55);
+  border-color: rgba(239, 68, 68, 0.55) !important;
   box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.35), 0 30px 90px rgba(239, 68, 68, 0.14);
 }
 
@@ -34,7 +52,7 @@
 
 .sign {
   font-family: var(--font-mono);
-  font-size: 3.4rem;
+  font-size: clamp(2rem, 6vh, 3.4rem);
   font-weight: 700;
   line-height: 1;
   transition: color var(--dur-standard) ease;
@@ -109,17 +127,17 @@
 
 .bit {
   font-family: var(--font-mono);
-  font-size: clamp(0.85rem, 2.4vw, 1.25rem);
+  font-size: clamp(0.7rem, 1.4vh, 1rem);
   font-weight: 500;
-  width: clamp(1.7rem, 5vw, 2.4rem);
-  height: clamp(2.2rem, 6vw, 3rem);
+  width: clamp(1.3rem, 3.2vw, 2.0rem);
+  height: clamp(1.6rem, 4vh, 2.2rem);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
   border: 1px solid var(--hairline);
   color: rgba(201, 209, 217, 0.4);
-  background: rgba(5, 6, 10, 0.5);
+  background: var(--bg-dark-scrim);
   transition: color var(--dur-micro) ease, border-color var(--dur-micro) ease,
     background var(--dur-micro) ease, box-shadow var(--dur-micro) ease;
 }
@@ -183,7 +201,7 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: var(--s3);
+  gap: clamp(var(--s2), 2vh, var(--s3));
   width: 100%;
   max-width: 760px;
 }
@@ -192,10 +210,10 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: var(--s3);
+  padding: clamp(var(--s1), 1.5vh, var(--s2));
   border-radius: var(--radius);
   border: 1px solid var(--hairline);
-  background: rgba(5, 6, 10, 0.4);
+  background: var(--bg-dark-scrim);
   text-align: center;
 }
 .castBoxBad {
@@ -213,7 +231,7 @@
   font-family: var(--font-mono);
   font-size: 1.3rem;
   font-weight: 700;
-  color: #eef2f6;
+  color: var(--text-bright);
 }
 .castValue.mono {
   color: var(--telemetry-cyan);
@@ -250,7 +268,7 @@
   max-width: 760px;
   display: flex;
   flex-direction: column;
-  gap: var(--s2);
+  gap: clamp(var(--s1), 1.5vh, var(--s2));
 }
 
 /* Velocity control — a custom HUD gauge, not a stock range input. The track carries
@@ -288,7 +306,7 @@
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 30px;
+  height: clamp(26px, 4vh, 30px);
   background: transparent;
   cursor: pointer;
 }

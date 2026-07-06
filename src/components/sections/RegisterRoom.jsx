@@ -5,7 +5,6 @@ import Counter from '../reactbits/Counter.jsx';
 import FuzzyText from '../reactbits/FuzzyText.jsx';
 import Scene, { sceneStyles } from './Scene.jsx';
 import { useExhibit } from '../exhibit/ExhibitState.jsx';
-import MetalSurface from '../exhibit/MetalSurface.jsx';
 import {
   pattern16,
   toSigned16,
@@ -48,7 +47,7 @@ function BitCell({ bit, isSign, overflowed, reducedMotion }) {
 }
 
 export default function RegisterRoom() {
-  const { velocityMV, spike, reducedMotion } = useExhibit();
+  const { velocityMV, spike, reducedMotion, setBurnStage } = useExhibit();
   const [velocity, setVelocity] = useState(0);
   const prevOverflow = useRef(false);
   const driver = useMotionValue(0);
@@ -80,6 +79,14 @@ export default function RegisterRoom() {
     }
     prevOverflow.current = of;
   }, [velocity, spike]);
+
+  // Map velocity to burn stage: 0–16383 → stage 1, 16384–32767 → stage 2,
+  // overflow (≥32768) → stage 4 (no stage 3; the overflow IS the catastrophe).
+  useEffect(() => {
+    const p = pattern16(velocity);
+    const stage = p <= 16383 ? 1 : p <= 32767 ? 2 : 4;
+    setBurnStage(stage);
+  }, [velocity, setBurnStage]);
 
   const stopReplay = useCallback(() => {
     if (replayRef.current) {
@@ -124,19 +131,20 @@ export default function RegisterRoom() {
 
   return (
     <Scene id="register-room">
-      <h2 className={sceneStyles.title}>One register, two meanings</h2>
-      <p className={sceneStyles.lede}>
-        The SRI stored horizontal velocity as a 64-bit float, then cast it into a
-        signed 16-bit integer for alignment code reused from Ariane 4. Drag the
-        velocity up and watch the register fill. At{' '}
-        <span className={styles.inlineMono}>32,767</span> there is exactly one bit of
-        headroom left — the sign bit.
-      </p>
+      <div className={styles.intro}>
+        <h2 className={sceneStyles.title}>One register, two meanings</h2>
+        <p className={sceneStyles.lede}>
+          The SRI stored horizontal velocity as a 64-bit float, then cast it into a
+          signed 16-bit integer for alignment code reused from Ariane 4. Drag the
+          velocity up and watch the register fill. At{' '}
+          <span className={styles.inlineMono}>32,767</span> there is exactly one bit of
+          headroom left — the sign bit.
+        </p>
+      </div>
 
       <div
         className={clsx(styles.viz, overflowed && styles.vizBad)}
       >
-        <MetalSurface />
         <div className={styles.readout}>
           <span
             className={clsx(styles.sign, overflowed ? styles.signNeg : styles.signPos)}

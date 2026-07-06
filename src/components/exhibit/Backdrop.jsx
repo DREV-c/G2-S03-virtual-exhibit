@@ -6,7 +6,7 @@ import {
   useReducedMotion,
   animate,
 } from 'framer-motion';
-import HullBackdrop from './HullBackdrop.jsx';
+import BurnBackdrop from './BurnBackdrop.jsx';
 import SystemNoise from './SystemNoise.jsx';
 import StarField from '../background/StarField.jsx';
 import { useExhibit } from './ExhibitState.jsx';
@@ -15,9 +15,9 @@ import styles from './Backdrop.module.css';
 // All ambient layers, fixed behind content, subscribing to the one instability value.
 // Two-phase backdrop (specs/behaviors/hull-backdrop.md): the space void + StarField is
 // the Launch phase; on descent (leaving Launch, activeIndex ≥ 1) it crossfades to the
-// weathered hull, which holds for scenes 1–5. The amber/red heat bloom, Noise, and red
-// wash layer on top of whichever phase is active.
-export default function Backdrop({ activeIndex = 0 }) {
+// burn backdrop, which holds for scenes 1–5. The burn backdrop renders a stage (1–4)
+// driven by each section's interactive state.
+export default function Backdrop({ activeIndex = 0, burnStage = 1 }) {
   const { instability } = useExhibit();
   const reduced = useReducedMotion();
 
@@ -59,7 +59,7 @@ export default function Backdrop({ activeIndex = 0 }) {
   return (
     <div className={styles.backdrop} aria-hidden="true">
       <motion.div className={styles.hullWrap} style={{ opacity: descent }}>
-        <HullBackdrop />
+        <BurnBackdrop stage={burnStage} />
       </motion.div>
       <motion.div className={`${styles.layer} ${styles.space}`} style={{ opacity: spaceOpacity }}>
         {starsMounted && <StarField count={70} />}

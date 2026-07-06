@@ -55,12 +55,14 @@ export default function Postmortem() {
   const { reducedMotion } = useExhibit();
   return (
     <Scene id="postmortem">
-      <h2 className={sceneStyles.title}>Six lessons from 37 seconds</h2>
-      <p className={sceneStyles.lede}>
-        The board of inquiry found no villain — only a chain of reasonable decisions
-        that each made sense alone. The machine did exactly what it was built to do.
-        Tap a card for the lesson.
-      </p>
+      <div className={styles.intro}>
+        <h2 className={sceneStyles.title}>Six lessons from 37 seconds</h2>
+        <p className={sceneStyles.lede}>
+          The board of inquiry found no villain — only a chain of reasonable decisions
+          that each made sense alone. The machine did exactly what it was built to do.
+          Tap a card for the lesson.
+        </p>
+      </div>
 
       <div className={styles.grid}>
         {CARDS.map((c, i) => (

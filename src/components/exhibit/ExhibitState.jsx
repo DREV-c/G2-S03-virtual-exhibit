@@ -66,6 +66,10 @@ export function ExhibitProvider({ activeIndex = 0, children }) {
   // without forcing provider re-renders.
   const velocityMV = useMotionValue(0);
 
+  // Burn stage (1–4) driven by each section's interactive state. The BurnBackdrop
+  // subscribes to this without forcing provider re-renders.
+  const burnStageMV = useMotionValue(1);
+
   const eventAnim = useRef(null);
 
   const value = useMemo(() => {
@@ -83,7 +87,13 @@ export function ExhibitProvider({ activeIndex = 0, children }) {
       scrollInstability: sceneInstability,
       eventInstability,
       velocityMV,
+      burnStageMV,
       reducedMotion: !!prefersReduced,
+
+      /** Set the burn stage (1–4) for the BurnBackdrop. */
+      setBurnStage(n) {
+        burnStageMV.set(Math.max(1, Math.min(4, Math.round(n))));
+      },
 
       /** Transient overflow spike: jump to `peak`, decay to 0 over `duration` s. */
       spike(peak = 1, duration = 0.8) {
@@ -130,7 +140,7 @@ export function ExhibitProvider({ activeIndex = 0, children }) {
         });
       },
     };
-  }, [instability, sceneInstability, eventInstability, velocityMV, prefersReduced]);
+  }, [instability, sceneInstability, eventInstability, velocityMV, burnStageMV, prefersReduced]);
 
   return (
     <ExhibitContext.Provider value={value}>{children}</ExhibitContext.Provider>

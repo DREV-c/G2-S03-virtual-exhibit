@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import Scene, { sceneStyles } from './Scene.jsx';
 import { useExhibit } from '../exhibit/ExhibitState.jsx';
-import MetalSurface from '../exhibit/MetalSurface.jsx';
 import styles from './MissionBriefing.module.css';
 
 const T_END = 39.1;
@@ -41,7 +40,7 @@ const TICKS = [
 const SEV_LABEL = { ok: 'Nominal', warn: 'Fault', bad: 'Critical' };
 
 export default function MissionBriefing() {
-  const { easeEventTo, releaseEvent } = useExhibit();
+  const { easeEventTo, releaseEvent, setBurnStage } = useExhibit();
   const [active, setActive] = useState(0);
   const [inView, setInView] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -68,6 +67,13 @@ export default function MissionBriefing() {
     if (inView) easeEventTo(TICKS[active].sig);
     else releaseEvent();
   }, [active, inView, easeEventTo, releaseEvent]);
+
+  // Map tick time to burn stage
+  useEffect(() => {
+    const t = TICKS[active].t;
+    const stage = t < 7 ? 1 : t < 36.7 ? 2 : t < 39.0 ? 3 : 4;
+    setBurnStage(stage);
+  }, [active, setBurnStage]);
 
   const select = (i) => setActive(Math.max(0, Math.min(TICKS.length - 1, i)));
 
@@ -210,7 +216,6 @@ export default function MissionBriefing() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.22 }}
           >
-            <MetalSurface />
             <div className={styles.cardHead}>
               <span className={styles.cardTag}>{tick.tag}</span>
               <span className={clsx(styles.sevBadge, styles[`badge_${tick.sev}`])}>

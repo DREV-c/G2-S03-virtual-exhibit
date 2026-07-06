@@ -5,12 +5,14 @@
  * "the backdrop serves the UI". */
 .intro {
   max-width: 68ch;
-  padding: var(--s3) var(--s4);
+  padding: clamp(var(--s2), 2vh, var(--s3)) clamp(var(--s3), 3vw, var(--s4));
   border-radius: var(--radius-lg);
-  background: linear-gradient(180deg, rgba(8, 11, 20, 0.64), rgba(8, 11, 20, 0.5));
-  border: 1px solid var(--hairline);
+  background: var(--card-bg);
+  border: var(--card-border);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(3px);
+  backdrop-filter: var(--card-blur);
+  -webkit-backdrop-filter: var(--card-blur);
+  margin-bottom: clamp(var(--s2), 2.5vh, var(--s4));
 }
 
 .intro > :last-child {
@@ -18,12 +20,20 @@
 }
 
 .scrubber {
-  margin-top: var(--s4);
+  margin-top: 0;
+  padding: clamp(var(--s2), 2vh, var(--s3)) clamp(var(--s3), 3vw, var(--s4));
+  border-radius: var(--radius-lg);
+  border: var(--card-border);
+  background: var(--card-bg);
+  backdrop-filter: var(--card-blur);
+  -webkit-backdrop-filter: var(--card-blur);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  margin-bottom: clamp(var(--s2), 2.5vh, var(--s4));
 }
 
 .track {
   position: relative;
-  height: 44px;
+  height: clamp(32px, 5vh, 44px);
   cursor: pointer;
   touch-action: none;
 }
@@ -41,7 +51,7 @@
   right: 0;
   height: 4px;
   transform: translateY(-50%);
-  background: rgba(201, 209, 217, 0.16);
+  background: rgba(255, 255, 255, 0.22);
   border-radius: 2px;
 }
 
@@ -140,8 +150,8 @@
   font-size: 0.82rem;
   letter-spacing: 0.03em;
   color: var(--ariane-silver);
-  background: rgba(34, 211, 238, 0.08);
-  border: 1px solid var(--hairline-strong);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 999px;
   padding: 0.5rem 1rem;
   cursor: pointer;
@@ -151,10 +161,11 @@
 .arrow:hover:not(:disabled) {
   border-color: var(--telemetry-cyan);
   color: var(--telemetry-cyan);
+  background: rgba(34, 211, 238, 0.12);
   transform: translateY(-1px);
 }
 .arrow:disabled {
-  opacity: 0.32;
+  opacity: 0.22;
   cursor: default;
 }
 
@@ -173,12 +184,14 @@
 .card {
   position: relative;
   isolation: isolate;
-  margin-top: var(--s4);
-  min-height: 210px;
-  border: 1px solid var(--hairline);
+  margin-top: 0;
+  min-height: clamp(140px, 20vh, 200px);
+  border: var(--card-border);
   border-radius: var(--radius-lg);
-  background: transparent; /* metal surface (MetalSurface) provides the fill */
-  padding: var(--s4);
+  background: var(--card-bg);
+  backdrop-filter: var(--card-blur);
+  -webkit-backdrop-filter: var(--card-blur);
+  padding: clamp(var(--s2), 2.5vh, var(--s4)) clamp(var(--s3), 3vw, var(--s4));
   box-sizing: border-box;
   transition: border-color var(--dur-standard) ease;
 }
@@ -230,22 +243,23 @@
 
 .cardTitle {
   font-family: var(--font-display);
-  font-size: 1.3rem;
+  font-size: clamp(1.1rem, 2.2vh, 1.3rem);
   color: #eef2f6;
-  margin: var(--s2) 0 var(--s1);
+  margin: clamp(var(--s1), 1.5vh, var(--s2)) 0 var(--s1);
 }
 .cardDetail {
   color: var(--muted-silver);
-  line-height: 1.62;
+  line-height: 1.5;
   max-width: 66ch;
+  font-size: clamp(0.85rem, 1.6vh, 0.95rem);
   margin: 0;
 }
 
 .telemetry {
   display: flex;
-  gap: var(--s5);
-  margin-top: var(--s3);
-  padding-top: var(--s3);
+  gap: clamp(var(--s3), 4vw, var(--s5));
+  margin-top: clamp(var(--s2), 2vh, var(--s3));
+  padding-top: clamp(var(--s2), 2vh, var(--s3));
   border-top: 1px solid var(--hairline);
   flex-wrap: wrap;
 }

@@ -1,6 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ExhibitProvider } from './exhibit/ExhibitState.jsx';
+import { ExhibitProvider, useExhibit } from './exhibit/ExhibitState.jsx';
 import Backdrop from './exhibit/Backdrop.jsx';
 import { MetalFilters } from './exhibit/MetalSurface.jsx';
 import TelemetryHUD from './exhibit/TelemetryHUD.jsx';
@@ -25,6 +25,11 @@ const SCENE_COMPONENTS = [
 ];
 const LAST = SCENES.length - 1;
 
+// Default burn stage per scene: Launch(0)=1, MissionBriefing(1)=1,
+// AboutBinary(2)=1, RegisterRoom(3)=1, DualSRI(4)=1, Postmortem(5)=1.
+// Interactive sections override this from within.
+const DEFAULT_BURN_STAGE = [1, 1, 1, 1, 1, 1];
+
 const WHEEL_THRESHOLD = 28; // accumulated deltaY before a wheel gesture steps
 const LOCK_MS = 820; // safety unlock ≥ transition duration
 
@@ -34,6 +39,61 @@ const variants = {
   center: { y: '0%', opacity: 1 },
   exit: (dir) => ({ y: dir >= 0 ? '-100%' : '100%', opacity: 0 }),
 };
+
+// Inner component that can access ExhibitContext (needs to be inside ExhibitProvider)
+function ExhibitStage({ active, direction, lockRef, step, goTo, stageRef, onStageClick }) {
+  const reduced = useReducedMotion();
+  const { burnStageMV, setBurnStage } = useExhibit();
+  const [burnStage, setBurnStageLocal] = useState(1);
+
+  // Set default burn stage on scene change
+  useEffect(() => {
+    const defaultStage = DEFAULT_BURN_STAGE[active] ?? 1;
+    setBurnStage(defaultStage);
+  }, [active, setBurnStage]);
+
+  // Subscribe to burnStageMV to sync to local state for passing to Backdrop
+  useEffect(() => {
+    const unsub = burnStageMV.on('change', (v) => {
+      setBurnStageLocal(Math.round(v));
+    });
+    return unsub;
+  }, [burnStageMV]);
+
+  const Active = SCENE_COMPONENTS[active];
+
+  return (
+    <>
+      <Backdrop activeIndex={active} burnStage={burnStage} />
+      <MetalFilters />
+      <div ref={stageRef} className={styles.stage} onClick={onStageClick}>
+        <AnimatePresence
+          custom={direction}
+          mode="sync"
+          initial={false}
+          onExitComplete={() => {
+            lockRef.current = false;
+          }}
+        >
+          <motion.div
+            key={active}
+            className={styles.pane}
+            data-active-pane
+            custom={direction}
+            variants={reduced ? undefined : variants}
+            initial={reduced ? false : 'enter'}
+            animate={reduced ? {} : 'center'}
+            exit={reduced ? { opacity: 0, transition: { duration: 0 } } : 'exit'}
+            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+          >
+            <Active />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+      <TelemetryHUD activeIndex={active} onNavigate={goTo} />
+    </>
+  );
+}
 
 export default function FatalConversion() {
   const reduced = useReducedMotion();
@@ -190,37 +250,17 @@ export default function FatalConversion() {
     }
   };
 
-  const Active = SCENE_COMPONENTS[active];
-
   return (
     <ExhibitProvider activeIndex={active}>
-      <Backdrop activeIndex={active} />
-      <MetalFilters />
-      <div ref={stageRef} className={styles.stage} onClick={onStageClick}>
-        <AnimatePresence
-          custom={direction}
-          mode="sync"
-          initial={false}
-          onExitComplete={() => {
-            lockRef.current = false;
-          }}
-        >
-          <motion.div
-            key={active}
-            className={styles.pane}
-            data-active-pane
-            custom={direction}
-            variants={reduced ? undefined : variants}
-            initial={reduced ? false : 'enter'}
-            animate={reduced ? {} : 'center'}
-            exit={reduced ? { opacity: 0, transition: { duration: 0 } } : 'exit'}
-            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-          >
-            <Active />
-          </motion.div>
-        </AnimatePresence>
-      </div>
-      <TelemetryHUD activeIndex={active} onNavigate={goTo} />
+      <ExhibitStage
+        active={active}
+        direction={direction}
+        lockRef={lockRef}
+        step={step}
+        goTo={goTo}
+        stageRef={stageRef}
+        onStageClick={onStageClick}
+      />
     </ExhibitProvider>
   );
 }

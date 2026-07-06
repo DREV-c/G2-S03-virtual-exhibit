@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import FuzzyText from '../reactbits/FuzzyText.jsx';
 import Scene, { sceneStyles } from './Scene.jsx';
 import { useExhibit } from '../exhibit/ExhibitState.jsx';
-import MetalSurface from '../exhibit/MetalSurface.jsx';
 import styles from './DualSRIFailure.module.css';
 
 const STEPS = [
@@ -31,7 +30,6 @@ function Panel({ which, step, mirror, reducedMotion }) {
   const name = `SRI ${which}`;
   return (
     <div className={clsx(styles.panel, styles[`p_${st}`], mirror && styles.mirror)}>
-      <MetalSurface />
       <div className={styles.panelHead}>
         <span className={clsx(styles.light, styles[`light_${st}`])} />
         <span className={styles.panelName}>{name}</span>
@@ -65,8 +63,14 @@ function Panel({ which, step, mirror, reducedMotion }) {
 
 export default function DualSRIFailure() {
   const [step, setStep] = useState(0);
-  const { reducedMotion } = useExhibit();
+  const { reducedMotion, setBurnStage } = useExhibit();
   const meta = STEPS[step];
+
+  // Map failure step to burn stage
+  const STEP_TO_STAGE = [1, 2, 3, 3, 4];
+  useEffect(() => {
+    setBurnStage(STEP_TO_STAGE[step] ?? 1);
+  }, [step, setBurnStage]);
 
   const go = (i) => setStep(Math.max(0, Math.min(STEPS.length - 1, i)));
   const onKeyDown = (e) => {
@@ -76,12 +80,14 @@ export default function DualSRIFailure() {
 
   return (
     <Scene id="dual-sri" kicker="The redundancy paradox — fifty milliseconds apart">
-      <h2 className={sceneStyles.title}>Two computers, one bug</h2>
-      <p className={sceneStyles.lede}>
-        The Ariane 5 carried two inertial reference systems so that if one failed, the
-        other would carry on. But both ran the <em>same</em> code on the{' '}
-        <em>same</em> data. Step through the failure and watch redundancy buy nothing.
-      </p>
+      <div className={styles.intro}>
+        <h2 className={sceneStyles.title}>Two computers, one bug</h2>
+        <p className={sceneStyles.lede}>
+          The Ariane 5 carried two inertial reference systems so that if one failed, the
+          other would carry on. But both ran the <em>same</em> code on the{' '}
+          <em>same</em> data. Step through the failure and watch redundancy buy nothing.
+        </p>
+      </div>
 
       <div className={styles.stage}>
         <Panel which={1} step={step} mirror={false} reducedMotion={reducedMotion} />
