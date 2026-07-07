@@ -114,130 +114,219 @@ function Panel({ which, step, mirror, reducedMotion }) {
 
 export default function DualSRIFailure() {
   const [step, setStep] = useState(0);
-  const { reducedMotion, setBurnStage } = useExhibit();
+  const { activeIndex, reducedMotion, setBurnStage } = useExhibit();
   const meta = STEPS[step];
+
+  // Pagination state: 0 = Intro, 1 = Timeline
+  const [page, setPage] = useState(0);
+
+  useEffect(() => {
+    // Reset to page 0 when leaving the scene (assuming Dual SRI is index 4)
+    if (activeIndex !== 4) {
+      setPage(0);
+      setStep(0);
+    }
+  }, [activeIndex]);
 
   // Map failure step to burn stage
   const STEP_TO_STAGE = [1, 2, 3, 3, 4];
   useEffect(() => {
-    setBurnStage(STEP_TO_STAGE[step] ?? 1);
-  }, [step, setBurnStage]);
+    setBurnStage(page === 0 ? 1 : (STEP_TO_STAGE[step] ?? 1));
+  }, [page, step, setBurnStage]);
 
   const isFault = step >= 1 && step <= 3;
-  const noiseAlpha = isFault ? 40 : 10;
+  const noiseAlpha = isFault && page === 1 ? 40 : 10;
 
   const go = (i) => setStep(Math.max(0, Math.min(STEPS.length - 1, i)));
   const onKeyDown = (e) => {
-    if (e.key === 'ArrowRight') { e.preventDefault(); go(step + 1); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); go(step - 1); }
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      if (page === 0) setPage(1);
+      else go(step + 1);
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      if (page === 1 && step === 0) setPage(0);
+      else if (page === 1) go(step - 1);
+    }
   };
 
   return (
-    <Scene id="dual-sri" kicker="The redundancy paradox — fifty milliseconds apart">
-      <div className={styles.sceneWrapper}>
+    <Scene id="dual-sri" kicker={page === 1 ? "The redundancy paradox — fifty milliseconds apart" : "Hardware Overview"}>
+      <div 
+        className={styles.sceneWrapper}
+        tabIndex={0}
+        onKeyDown={onKeyDown}
+        style={{ outline: 'none' }}
+      >
+        {page === 1 && (
+          <button 
+            className={clsx(styles.navArrow, styles.navLeft)} 
+            onClick={() => setPage(0)}
+            aria-label="Previous Page"
+          >
+            ← BACK
+          </button>
+        )}
+        {page === 0 && (
+          <button 
+            className={clsx(styles.navArrow, styles.navRight)} 
+            onClick={() => setPage(1)}
+            aria-label="Next Page"
+          >
+            NEXT →
+          </button>
+        )}
         {!reducedMotion && (
           <div className={styles.noiseWrapper}>
             <Noise patternAlpha={noiseAlpha} patternScaleX={2} patternScaleY={2} />
           </div>
         )}
-        <div className={styles.intro}>
-          <h2 className={sceneStyles.title}>Two computers, one bug</h2>
-          <p className={sceneStyles.lede}>
-            The Ariane 5 rocket carried two navigation computers. The idea was simple: if one breaks, the backup takes over. But there was a catch, they both ran the <em>exact same code</em>. Step through the timeline to see why having a clone doesn't help if they both share the same bug.
-          </p>
-        </div>
-
-      <div className={clsx(styles.stage, isFault && styles.alarmGrid)}>
-        <Panel which={1} step={step} mirror={false} reducedMotion={reducedMotion} />
-
-        <div className={styles.bus}>
-          <span className={styles.busLabel}>DATA CABLE</span>
-          <div className={clsx(styles.busLine, styles[`busLine_${meta.bus}`])}>
-            {meta.bus === 'data' && <span className={styles.busData}>+0.03° · tilt</span>}
-            {meta.bus === 'diag' &&
-              (reducedMotion ? (
-                <span className={styles.busDiagStatic}>0x8B7E · ERROR?</span>
-              ) : (
-                <FuzzyText
-                  fontFamily='"Spline Sans Mono", monospace'
-                  fontSize={14}
-                  fontWeight={500}
-                  color="#F59E0B"
-                  enableHover={false}
-                  glitchMode
-                  glitchInterval={700}
-                  glitchDuration={130}
-                  fuzzRange={12}
-                  baseIntensity={0.2}
-                  className={styles.busFuzz}
-                >
-                  0x8B7E ERROR?
-                </FuzzyText>
-              ))}
-            {meta.bus === 'silent' && <span className={styles.busSilent}>— no signal —</span>}
-          </div>
-          {meta.bus === 'diag' && (
-            <span className={styles.busNote}>The main computer thinks this error code is a real steering command.</span>
-          )}
-        </div>
-
-        <Panel which={2} step={step} mirror reducedMotion={reducedMotion} />
-      </div>
-
-      <div className={styles.controls}>
-        <div
-          className={styles.steps}
-          role="group"
-          aria-label="Failure sequence step"
-          tabIndex={0}
-          onKeyDown={onKeyDown}
-        >
-          <button
-            type="button"
-            className={styles.stepBtn}
-            onClick={() => go(step - 1)}
-            disabled={step === 0}
-            aria-label="Previous step"
-          >
-            ‹
-          </button>
-          <div className={styles.stepDots}>
-            {STEPS.map((s, i) => (
-              <button
-                key={i}
-                type="button"
-                className={clsx(styles.stepDot, i === step && styles.stepDotActive)}
-                onClick={() => go(i)}
-                aria-label={`Step ${i + 1}: ${s.label}`}
-                aria-current={i === step ? 'true' : undefined}
-              />
-            ))}
-          </div>
-          <button
-            type="button"
-            className={styles.stepBtn}
-            onClick={() => go(step + 1)}
-            disabled={step === STEPS.length - 1}
-            aria-label="Next step"
-          >
-            ›
-          </button>
-        </div>
-
         <AnimatePresence mode="wait">
-          <motion.div
-            key={step}
-            className={styles.caption}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: reducedMotion ? 0 : 0.22 }}
-          >
-            <span className={styles.capLabel}>{meta.label}</span>
-            <p className={styles.capText}>{meta.desc}</p>
-          </motion.div>
+          {page === 0 ? (
+            <motion.div 
+              key="page0"
+              className={styles.pageContent}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className={styles.intro}>
+                <h2 className={sceneStyles.title}>The Rocket's "Inner Ear"</h2>
+                <p className={sceneStyles.lede}>
+                  Imagine playing a fast-paced VR game, but your headset suddenly freezes and reports you're upside down. You'd probably fall over, right? That's what happened to the Ariane 5 rocket, except instead of a VR headset, it used a massive <strong>Inertial Reference System (SRI)</strong> to track its orientation in 3D space.
+                </p>
+              </div>
+
+              <div className={styles.educationalDiagram}>
+                <div className={styles.sriConcept}>
+                  <div className={styles.sriBox}>
+                    <div className={styles.sriBoxTitle}>Primary SRI</div>
+                    <div className={styles.sriBoxStatus}>Actively steering the rocket</div>
+                  </div>
+                  <div className={styles.sriConceptArrow}>⇄</div>
+                  <div className={styles.sriBox}>
+                    <div className={styles.sriBoxTitle}>Backup SRI</div>
+                    <div className={styles.sriBoxStatus}>Waiting to take over if needed</div>
+                  </div>
+                </div>
+                <p className={styles.diagCaption}>Redundancy: Having a perfect clone ready to step in.</p>
+              </div>
+
+              <div className={styles.intro}>
+                <p className={sceneStyles.lede}>
+                  A rocket is a $500 million fireball, so engineers don't just put one SRI on board. They install <strong>two</strong>. If the Primary unit gets hit by a cosmic ray or physically breaks, the Backup instantly takes over. It's the ultimate failsafe, unless the problem is a typo in the code they both share.
+                </p>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div 
+              key="page1"
+              className={styles.pageContent}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className={styles.intro}>
+                <h2 className={sceneStyles.title}>Two computers, one bug</h2>
+                <p className={sceneStyles.lede}>
+                  The Ariane 5 rocket carried two navigation computers. The idea was simple: if one breaks, the backup takes over. But there was a catch, they both ran the <em>exact same code</em>. Step through the timeline to see why having a clone doesn't help if they both share the same bug.
+                </p>
+              </div>
+
+              <div className={clsx(styles.stage, isFault && styles.alarmGrid)}>
+                <Panel which={1} step={step} mirror={false} reducedMotion={reducedMotion} />
+
+                <div className={styles.bus}>
+                  <span className={styles.busLabel}>DATA CABLE</span>
+                  <div className={clsx(styles.busLine, styles[`busLine_${meta.bus}`])}>
+                    {meta.bus === 'data' && <span className={styles.busData}>+0.03° · tilt</span>}
+                    {meta.bus === 'diag' &&
+                      (reducedMotion ? (
+                        <span className={styles.busDiagStatic}>0x8B7E · ERROR?</span>
+                      ) : (
+                        <FuzzyText
+                          fontFamily='"Spline Sans Mono", monospace'
+                          fontSize={14}
+                          fontWeight={500}
+                          color="#F59E0B"
+                          enableHover={false}
+                          glitchMode
+                          glitchInterval={700}
+                          glitchDuration={130}
+                          fuzzRange={12}
+                          baseIntensity={0.2}
+                          className={styles.busFuzz}
+                        >
+                          0x8B7E ERROR?
+                        </FuzzyText>
+                      ))}
+                    {meta.bus === 'silent' && <span className={styles.busSilent}>— no signal —</span>}
+                  </div>
+                  {meta.bus === 'diag' && (
+                    <span className={styles.busNote}>The main computer thinks this error code is a real steering command.</span>
+                  )}
+                </div>
+
+                <Panel which={2} step={step} mirror reducedMotion={reducedMotion} />
+              </div>
+
+              <div className={styles.controls}>
+                <div
+                  className={styles.steps}
+                  role="group"
+                  aria-label="Failure sequence step"
+                >
+                  <button
+                    type="button"
+                    className={styles.stepBtn}
+                    onClick={() => go(step - 1)}
+                    disabled={step === 0}
+                    aria-label="Previous step"
+                  >
+                    ‹
+                  </button>
+                  <div className={styles.stepDots}>
+                    {STEPS.map((s, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        className={clsx(styles.stepDot, i === step && styles.stepDotActive)}
+                        onClick={() => go(i)}
+                        aria-label={`Step ${i + 1}: ${s.label}`}
+                        aria-current={i === step ? 'true' : undefined}
+                      />
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    className={styles.stepBtn}
+                    onClick={() => go(step + 1)}
+                    disabled={step === STEPS.length - 1}
+                    aria-label="Next step"
+                  >
+                    ›
+                  </button>
+                </div>
+
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={step}
+                    className={styles.caption}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: reducedMotion ? 0 : 0.22 }}
+                  >
+                    <span className={styles.capLabel}>{meta.label}</span>
+                    <p className={styles.capText}>{meta.desc}</p>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
-      </div>
       </div>
     </Scene>
   );
