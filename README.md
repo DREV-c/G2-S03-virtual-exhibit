@@ -53,7 +53,7 @@ LIMPIN, Kryster Knowell
 MORGAN, Jack Owen  
 SUAREZ, Santino Jose
 
-*Github: [https://github.com/aq7zo/CSARCH2-G2-S03-Project](https://github.com/aq7zo/CSARCH2-G2-S03-Project)*
+*Github: [https://github.com/DREV-c/G2-S03-virtual-exhibit/](https://github.com/DREV-c/G2-S03-virtual-exhibit/)*
 
 ### 1. Topic Theme: “FATAL CONVERS10N: The Ariane Flight V88 Catastrophe”
 
