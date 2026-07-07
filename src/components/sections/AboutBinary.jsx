@@ -73,94 +73,100 @@ export default function AboutBinary() {
 
   return (
     <Scene id="about-binary">
-      <div className={styles.intro}>
-        <h2 className={sceneStyles.title}>Binary code: the language of machines</h2>
-        <p className={sceneStyles.lede}>
-          Binary is the simple system that turns electrical signals into information.
-          It powers the logic behind computers, from the first electronic machines to
-          the spacecraft and devices we use today.
-        </p>
-      </div>
-
-      <div className={styles.topicSection}>
-        <div className={styles.topicSwitcher} role="tablist" aria-label="Binary code topics">
-          {TOPICS.map((topic) => (
-            <button
-              key={topic.id}
-              type="button"
-              className={clsx(styles.topicButton, activeTopic === topic.id && styles.active)}
-              onClick={() => setActiveTopic(topic.id)}
-              aria-pressed={activeTopic === topic.id}
-            >
-              {topic.label}
-            </button>
-          ))}
-        </div>
-
-        <div className={styles.topicPanel}>
-          <span className={styles.topicEyebrow}>{activeContent.eyebrow}</span>
-          <h3 className={styles.topicTitle}>{activeContent.title}</h3>
-          <div className={styles.topicBody}>{activeContent.body}</div>
-          <div className={styles.topicHighlights}>
-            {activeContent.highlights.map((item) => (
-              <span key={item} className={styles.topicChip}>
-                {item}
-              </span>
-            ))}
+      <div className={styles.contentGrid}>
+        <div className={styles.leftCol}>
+          <div className={styles.intro}>
+            <h2 className={sceneStyles.title}>Binary code: the language of machines</h2>
+            <p className={sceneStyles.lede}>
+              Binary is the simple system that turns electrical signals into information.
+              It powers the logic behind computers, from the first electronic machines to
+              the spacecraft and devices we use today.
+            </p>
           </div>
-        </div>
-      </div>
 
-      <div className={styles.lab}>
-        <div className={styles.labHead}>
-          <span className={styles.labTitle}>Try it — an 8-bit register</span>
-          <span className={styles.labHint}>Click any bit. The top bit is the sign.</span>
-        </div>
-
-        <div className={styles.bits}>
-          {bits.map((b, i) => (
-            <div key={i} className={styles.bitCol}>
-              <span className={styles.place}>{i === 0 ? '−128' : 2 ** (7 - i)}</span>
-              <button
-                type="button"
-                className={clsx(
-                  styles.bit,
-                  i === 0 && styles.signBit,
-                  b === 1 && (i === 0 ? styles.signOn : styles.on)
-                )}
-                onClick={() => toggle(i)}
-                aria-pressed={b === 1}
-                aria-label={`Bit ${7 - i}, weight ${i === 0 ? -128 : 2 ** (7 - i)}, currently ${b}`}
-              >
-                {b}
-              </button>
+          <div className={styles.topicSection}>
+            <div className={styles.topicSwitcher} role="tablist" aria-label="Binary code topics">
+              {TOPICS.map((topic) => (
+                <button
+                  key={topic.id}
+                  type="button"
+                  className={clsx(styles.topicButton, activeTopic === topic.id && styles.active)}
+                  onClick={() => setActiveTopic(topic.id)}
+                  aria-pressed={activeTopic === topic.id}
+                >
+                  {topic.label}
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <div className={styles.readouts}>
-          <div className={styles.ro}>
-            <span className={styles.roK}>Unsigned</span>
-            <span className={styles.roV}>{unsigned}</span>
-          </div>
-          <div className={styles.ro}>
-            <span className={styles.roK}>Signed (two's complement)</span>
-            <span className={clsx(styles.roV, signed < 0 ? styles.neg : styles.pos)}>
-              {signed}
-            </span>
-          </div>
-          <div className={styles.ro}>
-            <span className={styles.roK}>Hex</span>
-            <span className={styles.roV}>{hex}</span>
+            <div className={styles.topicPanel}>
+              <span className={styles.topicEyebrow}>{activeContent.eyebrow}</span>
+              <h3 className={styles.topicTitle}>{activeContent.title}</h3>
+              <div className={styles.topicBody}>{activeContent.body}</div>
+              <div className={styles.topicHighlights}>
+                {activeContent.highlights.map((item) => (
+                  <span key={item} className={styles.topicChip}>
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
-        <p className={styles.foot}>
-          Flip only the top bit and the unsigned value barely changes — but the{' '}
-          <span className={styles.signedWord}>signed</span> reading leaps past zero
-          into the negatives. That is the same logic that makes numeric data behave in
-          surprising ways inside computers.
-        </p>
+        <div className={styles.rightCol}>
+          <div className={styles.lab}>
+            <div className={styles.labHead}>
+              <span className={styles.labTitle}>Try it — an 8-bit register</span>
+              <span className={styles.labHint}>Click any bit. The top bit is the sign.</span>
+            </div>
+
+            <div className={styles.bits}>
+              {bits.map((b, i) => (
+                <div key={i} className={styles.bitCol}>
+                  <span className={styles.place}>{i === 0 ? '−128' : 2 ** (7 - i)}</span>
+                  <button
+                    type="button"
+                    className={clsx(
+                      styles.bit,
+                      i === 0 && styles.signBit,
+                      b === 1 && (i === 0 ? styles.signOn : styles.on)
+                    )}
+                    onClick={() => toggle(i)}
+                    aria-pressed={b === 1}
+                    aria-label={`Bit ${7 - i}, weight ${i === 0 ? -128 : 2 ** (7 - i)}, currently ${b}`}
+                  >
+                    {b}
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className={styles.readouts}>
+              <div className={styles.ro}>
+                <span className={styles.roK}>Unsigned</span>
+                <span className={styles.roV}>{unsigned}</span>
+              </div>
+              <div className={styles.ro}>
+                <span className={styles.roK}>Signed (two's complement)</span>
+                <span className={clsx(styles.roV, signed < 0 ? styles.neg : styles.pos)}>
+                  {signed}
+                </span>
+              </div>
+              <div className={styles.ro}>
+                <span className={styles.roK}>Hex</span>
+                <span className={styles.roV}>{hex}</span>
+              </div>
+            </div>
+
+            <p className={styles.foot}>
+              Flip only the top bit and the unsigned value barely changes — but the{' '}
+              <span className={styles.signedWord}>signed</span> reading leaps past zero
+              into the negatives. That is the same logic that makes numeric data behave in
+              surprising ways inside computers.
+            </p>
+          </div>
+        </div>
       </div>
     </Scene>
   );

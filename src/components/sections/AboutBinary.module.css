@@ -1,5 +1,15 @@
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(var(--s3), 4vw, var(--s5));
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: center;
+}
+
 .intro {
-  max-width: 68ch;
+  width: 100%;
   padding: clamp(var(--s2), 2vh, var(--s3)) clamp(var(--s3), 3vw, var(--s4));
   border-radius: var(--radius-lg);
   background: var(--card-bg);
@@ -8,6 +18,7 @@
   backdrop-filter: var(--card-blur);
   -webkit-backdrop-filter: var(--card-blur);
   margin-bottom: clamp(var(--s2), 2.5vh, var(--s4));
+  box-sizing: border-box;
 }
 
 .intro > :last-child {
@@ -46,10 +57,11 @@
 }
 
 .topicButton.active {
-  color: var(--text-bright);
-  border-color: rgba(34, 211, 238, 0.45);
-  background: rgba(34, 211, 238, 0.12);
-  box-shadow: 0 0 16px rgba(34, 211, 238, 0.16);
+  color: #05060a;
+  background: var(--telemetry-cyan);
+  border-color: var(--telemetry-cyan);
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.4);
+  font-weight: 600;
 }
 
 .topicPanel {
@@ -234,4 +246,10 @@
 .signedWord {
   color: var(--catastrophe-red);
   font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
 }
