@@ -11,18 +11,21 @@
 * Built the initial skeleton structures for the interactive React components.
 
 ### 2. Aha Moments & Things Learned
-* 
+*
 
 ### 3. Challenges & Creative Development
-* 
+* The shipped template was initially written for Astro 5 and, consequently, does not work with Astro 6, due to the major architectural changes specified in the requirements.
+ * Our initial draft envisioned a space- and stars-themed background for the whole exhibit. We added a dynamic background that matched the level of "severity" caused by the overflow error, to further illustrate how a single unhandled exception escalated into total loss of guidance and the destruction of the rocket.
+ * Our first version was built with free scrolling, but we then decided to implement section-snapping for an improved "full-screen preview" of each exhibit.
 
 ### 4. Things to be Done (Final Submission)
-* 
+* Additional polish and stylistic refinements to the CSS and React components.
+* Consider adding a preview of the spacecraft during its actual launch alongside each step in the "mission briefing" exhibit.
 
 ---
 
 ## AI/LLM Disclosure
-* **Tool Used:** claude
+* **Tool Used:** Claude
 * **Purpose:** Used for project management, coding assistant to brainstorm and troubleshoot. 
 
 ---
@@ -43,7 +46,8 @@
 
 # CSARCH2 Virtual Exhibit Proposal: FATAL CONVERS10N
 
-**Group 2 – Carry the one:** CAMPO, Benette Enzo  
+**Group 2 – Carry the one:** 
+CAMPO, Benette Enzo  
 GARCIA, Andrea Gayle  
 LIMPIN, Kryster Knowell  
 MORGAN, Jack Owen  
