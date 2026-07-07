@@ -3,7 +3,7 @@
 
 ---
 
-## Mid-Milestone Progress Report
+## Mid-Milestone
 
 ### 1. Development (Things Done)
 * Forked the baseline template and strictly configured the repository to run on **Node.js 26** and **Astro 6** as per the architectural requirements.
