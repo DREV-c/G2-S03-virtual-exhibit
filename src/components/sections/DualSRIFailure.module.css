@@ -1,5 +1,26 @@
+.sceneWrapper {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  padding: 20px;
+}
+
+.noiseWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+}
+
 .intro {
-  max-width: 68ch;
+  position: relative;
+  z-index: 1;
+  width: 100%;
   padding: clamp(var(--s2), 2vh, var(--s3)) clamp(var(--s3), 3vw, var(--s4));
   border-radius: var(--radius-lg);
   background: var(--card-bg);
@@ -8,21 +29,56 @@
   backdrop-filter: var(--card-blur);
   -webkit-backdrop-filter: var(--card-blur);
   margin-bottom: clamp(var(--s2), 2.5vh, var(--s4));
+  box-sizing: border-box;
 }
 
 .intro > :last-child {
   margin-bottom: 0;
 }
 
+.intro p {
+  max-width: none;
+}
+
 .stage {
   margin-top: clamp(var(--s2), 2.5vh, var(--s4));
   display: grid;
-  /* Fixed three-column layout: equal panels flanking a fixed-width bus.
-   * minmax keeps the panels from collapsing but never lets the bus column
-   * content dictate their proportions across steps. */
-  grid-template-columns: minmax(160px, 1fr) 150px minmax(160px, 1fr);
+  grid-template-columns: minmax(220px, 1fr) 180px minmax(220px, 1fr);
   align-items: stretch;
-  gap: clamp(var(--s2), 2vw, var(--s3));
+  gap: clamp(var(--s3), 3vw, var(--s4));
+  position: relative;
+  width: 100%;
+  padding: 0 167px; /* Space for the back/next buttons */
+  box-sizing: border-box;
+}
+
+/* Blueprint / circuit grid background */
+.stage::before {
+  content: "";
+  position: absolute;
+  top: -10%; left: -5%; right: -5%; bottom: -10%;
+  background-image: 
+    linear-gradient(to right, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
+  background-size: 30px 30px;
+  pointer-events: none;
+  z-index: -1;
+  transition: background-image 0.5s ease;
+}
+
+.alarmGrid::before {
+  background-image: 
+    linear-gradient(to right, rgba(239, 68, 68, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(239, 68, 68, 0.15) 1px, transparent 1px);
+  animation: alarm-jitter 0.1s infinite;
+}
+
+@keyframes alarm-jitter {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(1px, 1px); }
+  50% { transform: translate(-1px, 0); }
+  75% { transform: translate(0, 1px); }
+  100% { transform: translate(0, 0); }
 }
 
 .panel {
@@ -33,7 +89,7 @@
   background: var(--card-bg);
   backdrop-filter: var(--card-blur);
   -webkit-backdrop-filter: var(--card-blur);
-  padding: clamp(var(--s2), 2.5vh, var(--s3));
+  padding: 0; /* Padding is handled by border-glow-inner or we set it below */
   display: flex;
   flex-direction: column;
   gap: clamp(var(--s2), 2vh, var(--s3));
@@ -41,6 +97,15 @@
     opacity var(--dur-scene) ease;
   /* Lock panel dimensions so they never grow/shrink across steps. */
   min-height: 140px;
+}
+/* We need to style the inner content of BorderGlow to have padding */
+.panel > :global(.border-glow-inner) {
+  padding: clamp(var(--s2), 2.5vh, var(--s3));
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--s1), 1vh, var(--s2));
+  height: 100%;
+  box-sizing: border-box;
 }
 /* Mirror symmetry: backup panel is laid out as a mirror of the active one. */
 .mirror {
@@ -110,11 +175,91 @@
   flex-direction: column;
   gap: 4px;
   /* Fixed height — prevents grow/shrink as step content changes. */
-  height: 80px;
-  min-height: 80px;
-  max-height: 80px;
+  height: 120px;
+  min-height: 120px;
+  max-height: 120px;
   justify-content: center;
 }
+
+.panelScreen {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  padding: var(--s2);
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* CRT scanline effect */
+.panelScreen::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0),
+    rgba(255,255,255,0) 50%,
+    rgba(0,0,0,0.1) 50%,
+    rgba(0,0,0,0.1)
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.5;
+}
+
+.screenGlitch {
+  animation: glitch-anim 0.4s ease-in-out forwards;
+}
+
+@keyframes glitch-anim {
+  0% { transform: translate(0); filter: hue-rotate(0deg); }
+  10% { transform: translate(-4px, 2px) skewX(3deg); filter: invert(0.8); }
+  20% { transform: translate(4px, -2px) skewX(-3deg); filter: hue-rotate(90deg); }
+  30% { transform: translate(-2px, 1px); background: rgba(239, 68, 68, 0.4); }
+  40% { transform: translate(3px, -1px); filter: contrast(1.5); }
+  50% { transform: translate(-4px, -2px) skewY(3deg); }
+  60% { transform: translate(2px, 2px); background: rgba(239, 68, 68, 0.6); }
+  70% { transform: translate(-1px, -1px); filter: brightness(2); }
+  80% { transform: translate(3px, 1px) scale(1.02); }
+  90% { transform: translate(-2px, 0); }
+  100% { transform: translate(0); }
+}
+
+.screenOff {
+  animation: crt-power-off 0.4s ease-out forwards;
+}
+
+@keyframes crt-power-off {
+  0% {
+    transform: scale(1, 1);
+    opacity: 1;
+    filter: brightness(1);
+  }
+  30% {
+    transform: scale(1, 0.01);
+    opacity: 1;
+    filter: brightness(3);
+  }
+  60% {
+    transform: scale(0, 0.01);
+    opacity: 0.8;
+    filter: brightness(5);
+  }
+  100% {
+    transform: scale(0, 0);
+    opacity: 0;
+    filter: brightness(0);
+  }
+}
+
 .attitude {
   font-family: var(--font-lcd);
   font-size: clamp(1.3rem, 3.5vh, 2rem);
@@ -142,6 +287,67 @@
   color: var(--catastrophe-red);
 }
 
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  width: 100%;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+}
+
+.mirror .metrics {
+  direction: rtl;
+}
+
+.metricLabel {
+  color: var(--muted-silver);
+  font-size: 0.55rem;
+  letter-spacing: 0.05em;
+}
+
+.metricValueOk {
+  color: var(--telemetry-cyan);
+}
+
+.metricValueFault {
+  color: var(--catastrophe-red);
+}
+
+.metricValueDark {
+  color: rgba(201, 209, 217, 0.35);
+}
+
+.cpuBar {
+  width: 100%;
+  height: 2px;
+  background: rgba(201, 209, 217, 0.1);
+  margin-top: 2px;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.cpuBarFill {
+  height: 100%;
+  width: 12%;
+  background: var(--telemetry-cyan);
+  animation: cpu-flicker 2s infinite alternate;
+}
+
+@keyframes cpu-flicker {
+  0% { width: 10%; }
+  50% { width: 14%; }
+  100% { width: 12%; }
+}
+
 /* Center databus */
 .bus {
   display: flex;
@@ -150,9 +356,9 @@
   justify-content: center;
   gap: clamp(4px, 1vh, 8px);
   /* Fixed width — matches the grid column so content never restretches panels. */
-  width: 150px;
-  min-width: 150px;
-  max-width: 150px;
+  width: 180px;
+  min-width: 180px;
+  max-width: 180px;
   padding: clamp(var(--s2), 2vh, var(--s3)) var(--s2);
   border-radius: var(--radius-lg);
   background: var(--card-bg);
@@ -177,24 +383,69 @@
   border-top: 1px dashed var(--hairline-strong);
   border-bottom: 1px dashed var(--hairline-strong);
   padding: 6px 0;
+  position: relative;
+  overflow: hidden;
 }
+
+/* Base style for data flow */
+.busLine::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s, background-color 0.3s;
+}
+
+.busLine_data::before {
+  opacity: 1;
+  background: radial-gradient(circle at center, rgba(34, 197, 94, 0.5) 0%, transparent 70%);
+  animation: core-pulse 2s ease-in-out infinite;
+}
+
+.busLine_diag::before {
+  opacity: 1;
+  background: radial-gradient(circle at center, rgba(245, 158, 11, 0.7) 0%, transparent 80%);
+  animation: core-strobe 0.08s linear infinite;
+}
+
+@keyframes core-pulse {
+  0% { transform: scale(1, 0.5); filter: brightness(1); }
+  50% { transform: scale(1.2, 1); filter: brightness(1.5); }
+  100% { transform: scale(1, 0.5); filter: brightness(1); }
+}
+
+@keyframes core-strobe {
+  0% { transform: scale(1, 0.8); opacity: 1; filter: brightness(2) contrast(1.5); }
+  50% { transform: scale(1.1, 1.2); opacity: 0.5; filter: brightness(0.5); }
+  100% { transform: scale(1, 0.8); opacity: 1; filter: brightness(2) contrast(1.5); }
+}
+
 .busData {
   font-family: var(--font-lcd);
   font-size: 0.82rem;
   color: var(--signal-green);
+  position: relative;
+  z-index: 1;
 }
 .busDiagStatic {
   font-family: var(--font-lcd);
   font-size: 0.82rem;
   color: var(--booster-amber);
+  position: relative;
+  z-index: 1;
 }
 .busFuzz {
   display: block;
+  position: relative;
+  z-index: 1;
 }
 .busSilent {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   color: rgba(201, 209, 217, 0.4);
+  position: relative;
+  z-index: 1;
 }
 .busNote {
   font-family: var(--font-mono);
@@ -202,6 +453,101 @@
   color: var(--booster-amber);
   text-align: center;
   max-width: 140px;
+}
+
+/* Pagination & Educational Content */
+.pageContent {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.navArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--card-bg);
+  border: 1px solid var(--hairline-strong);
+  color: var(--text-bright);
+  padding: 0 var(--s3);
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.navArrow:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.navLeft { left: clamp(10px, 1vw, 20px); }
+.navRight { right: clamp(10px, 1vw, 20px); }
+
+.educationalDiagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: var(--s4) 0;
+  padding: var(--s4);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 600px;
+}
+
+.sriConcept {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s3);
+  margin-bottom: var(--s3);
+  width: 100%;
+}
+
+.sriBox {
+  background: var(--card-bg);
+  border: 1px solid var(--signal-green);
+  border-radius: var(--radius-md);
+  padding: var(--s2) var(--s3);
+  text-align: center;
+  flex: 1;
+  box-shadow: inset 0 0 20px rgba(34, 197, 94, 0.1);
+}
+
+.sriBoxTitle {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--text-bright);
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.sriBoxStatus {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--signal-green);
+}
+
+.sriConceptArrow {
+  font-size: 24px;
+  color: var(--text-muted);
+}
+
+.diagCaption {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
 /* Controls + caption */
@@ -266,7 +612,7 @@
 .caption {
   margin-top: clamp(var(--s2), 2.5vh, var(--s3));
   text-align: center;
-  max-width: 68ch;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   padding: var(--s3) var(--s4);
@@ -294,6 +640,7 @@
 @media (max-width: 720px) {
   .stage {
     grid-template-columns: 1fr;
+    padding: 0 20px;
   }
   .bus {
     flex-direction: row;
