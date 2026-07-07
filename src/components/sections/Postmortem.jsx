@@ -8,11 +8,11 @@ import styles from './Postmortem.module.css';
 
 const CARDS = [
   { n: '01', title: 'Reuse of code', front: 'Alignment code from Ariane 4 ran unchanged on Ariane 5.',
-    back: 'Inherited code must be re-validated against its new environment. This routine served no purpose after liftoff — yet it was still running.' },
-  { n: '02', title: 'Unprotected conversion', front: 'A 64-bit float was cast to a 16-bit int with no range check.',
-    back: 'Guard every narrowing conversion. Four of seven such casts were left unprotected to save processor budget.' },
-  { n: '03', title: 'Data vs. diagnostics', front: 'A failure code traveled on the same bus as flight data.',
-    back: 'Error signals must be distinguishable from valid values. The OBC read a diagnostic word as a real attitude angle.' },
+    back: 'Old code isn\'t automatically safe code. It was never tested against Ariane 5\'s faster flight path because the experts didn\'t expect that it needed to.' },
+  { n: '02', title: 'The number that didn\'t fit', front: 'Arian 5 flew faster than Ariane 4 ever had. Its velocity number grew too big for the slot built to hold it.',
+    back: 'A 16-bit slot maxes out at 32,767. Go one number over and the computer breaks instead of rounding, because velocity can\'t be negative.' },
+  { n: '03', title: 'Why did it just.. stop working?', front: 'The computer failed to warn anyone and shut itself off completely.',
+    back: 'No instruction existed for "number too big," so the safest thing that the computer knew to do was quit.' },
   { n: '04', title: 'Identical redundancy', front: 'Two SRIs, identical software, identical fault, 50 ms apart.',
     back: 'Redundancy only defends against independent failures. A shared bug takes both channels at once.' },
   { n: '05', title: 'Specification vs. testing', front: "Ariane 5's steeper, faster trajectory was never tested against this code.",
