@@ -14,42 +14,102 @@
   margin-bottom: 0;
 }
 
-.concepts {
+.topicSection {
   display: grid;
   gap: clamp(var(--s2), 2vh, var(--s3));
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   margin-bottom: clamp(var(--s2), 3vh, var(--s4));
 }
 
-.concept {
-  padding: clamp(var(--s2), 1.8vh, var(--s3));
-  border-radius: var(--radius);
+.topicSwitcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+}
+
+.topicButton {
   border: var(--card-border);
+  border-radius: 999px;
+  background: rgba(5, 6, 10, 0.52);
+  color: var(--muted-silver);
+  padding: 0.65rem 0.95rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--dur-micro) ease;
+}
+
+.topicButton:hover {
+  border-color: var(--hairline-strong);
+  color: var(--text-bright);
+}
+
+.topicButton.active {
+  color: var(--text-bright);
+  border-color: rgba(34, 211, 238, 0.45);
+  background: rgba(34, 211, 238, 0.12);
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.16);
+}
+
+.topicPanel {
+  border: var(--card-border);
+  border-radius: var(--radius-lg);
   background: var(--card-bg);
   backdrop-filter: var(--card-blur);
   -webkit-backdrop-filter: var(--card-blur);
+  padding: clamp(var(--s2), 2vh, var(--s3)) clamp(var(--s3), 3vw, var(--s4));
 }
-.conceptK {
-  font-family: var(--font-display);
-  font-size: clamp(0.9rem, 1.8vh, 1.02rem);
+
+.topicEyebrow {
+  display: inline-block;
+  margin-bottom: var(--s1);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   color: var(--telemetry-cyan);
-  margin: 0 0 var(--s1);
 }
-.conceptB {
-  margin: 0;
+
+.topicTitle {
+  margin: 0 0 var(--s2);
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2vh, 1.25rem);
+  color: var(--text-bright);
+}
+
+.topicBody {
   color: var(--muted-silver);
-  font-size: clamp(0.78rem, 1.6vh, 0.92rem);
-  line-height: 1.5;
+  line-height: 1.7;
+  font-size: 0.95rem;
 }
-.conceptB code {
+
+.topicBody code {
   font-family: var(--font-mono);
   color: var(--ariane-silver);
   background: rgba(5, 6, 10, 0.6);
   padding: 1px 5px;
   border-radius: 4px;
 }
-.conceptB strong {
+
+.topicBody strong {
   color: var(--text-bright);
+}
+
+.topicHighlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+  margin-top: var(--s2);
+}
+
+.topicChip {
+  border-radius: 999px;
+  padding: 0.4rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-bright);
+  background: rgba(201, 209, 217, 0.08);
 }
 
 .lab {
