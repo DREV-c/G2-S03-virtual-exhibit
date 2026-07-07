@@ -1,5 +1,49 @@
-**Group 2 – Carry the one:**  
-CAMPO, Benette Enzo  
+# FATAL CONVERS10N: The Ariane Flight V88 Catastrophe
+**Website Deployment Link:** 
+
+---
+
+## Mid-Milestone Progress Report
+
+### 1. Development (Things Done)
+* Forked the baseline template and strictly configured the repository to run on **Node.js 26** and **Astro 6** as per the architectural requirements.
+* Created parallel gut branches for development of components.
+* Built the initial skeleton structures for the interactive React components.
+
+### 2. Aha Moments & Things Learned
+* 
+
+### 3. Challenges & Creative Development
+* 
+
+### 4. Things to be Done (Final Submission)
+* 
+
+---
+
+## AI/LLM Disclosure
+* **Tool Used:** claude
+* **Purpose:** Used for project management, coding assistant to brainstorm and troubleshoot. 
+
+---
+
+## References & Citations
+
+* 1’s and 2’s complement of a Binary Number. (2025, March 20). *GeeksforGeeks*. https://www.geeksforgeeks.org/dsa/1s-2s-complement-binary-number/
+* Britannica Editors. (n.d.). binary code. *Britannica*. https://www.britannica.com/technology/binary-code
+* Coursera Staff. (2025, October 23). What is Binary Code? *Coursera*. https://www.coursera.org/articles/binary-code
+* European Space Agency. (1996). *Ariane 5 flight 501 failure report* (ESA Document No. ESA-X-1819). https://esamultimedia.esa.int/docs/esa-x-1819eng.pdf
+* European Space Agency. (1996). Ariane 5 flight 501: Failure analysis and lessons learned. *ESA Bulletin, 89*, 18–25. https://www.esa.int/esapub/bulletin/bullet89/dalma89.htm
+* European Space Agency. (1996, July 22). *Ariane 501 – Presentation of Inquiry Board report* (Press Release No. 33–1996). https://www.esa.int/Newsroom/Press_Releases/Ariane_501_-_Presentation_of_Inquiry_Board_report
+* Inquiry board traces Ariane 5 failure to overflow error. (1996, October). *SIAM News, 29*(8). https://people.computing.clemson.edu/~steve/Spiro/arianesiam.htm 
+* Pranav, A. (2024, August 10). The Binary Code System: A Universal Language Revolutionizing Computing. *Medium*. https://medium.com/@AyushmanPranav/the-binary-code-system-a-universal-language-revolutionizing-computing-1f980906b81e
+
+------------------------------------------------------------
+------------------------------------------------------------
+
+# CSARCH2 Virtual Exhibit Proposal: FATAL CONVERS10N
+
+**Group 2 – Carry the one:** CAMPO, Benette Enzo  
 GARCIA, Andrea Gayle  
 LIMPIN, Kryster Knowell  
 MORGAN, Jack Owen  
@@ -7,17 +51,15 @@ SUAREZ, Santino Jose
 
 *Github: [https://github.com/aq7zo/CSARCH2-G2-S03-Project](https://github.com/aq7zo/CSARCH2-G2-S03-Project)*
 
-1. **Topic Theme: “FATAL CONVERS10N: The Ariane Flight V88 Catastrophe”**
+### 1. Topic Theme: “FATAL CONVERS10N: The Ariane Flight V88 Catastrophe”
 
-The exhibit will use the example of the Ariane 5 rocket in 1996 to explore both software and hardware architecture vulnerabilities by <mark>understanding how computers represent and process numerical data. In this exhibit, we aim to provide knowledge about how numerical values are stored and managed within digital systems by starting with the fundamentals, such as the binary number system, signed integer representation, and fixed-size registers.</mark> Subsequently, the exhibit will display the overflow of a 64-bit register to a 16-bit register, which resulted in an unhandled exception that the CPU architecture was unable to isolate. We will study the catastrophic failure of the dual redundancy paradigm of the hardware. The primary and the backup processors were subjected to the same hardware exception and failed one after the other. <mark>Ultimately, the exhibit seeks to enlighten the audience about the relevance of computer architecture concepts by using a real-world problem.</mark>
+The exhibit will use the example of the Ariane 5 rocket in 1996 to explore both software and hardware architecture vulnerabilities by understanding how computers represent and process numerical data. In this exhibit, we aim to provide knowledge about how numerical values are stored and managed within digital systems by starting with the fundamentals, such as the binary number system, signed integer representation, and fixed-size registers. Subsequently, the exhibit will display the overflow of a 64-bit register to a 16-bit register, which resulted in an unhandled exception that the CPU architecture was unable to isolate. We will study the catastrophic failure of the dual redundancy paradigm of the hardware. The primary and the backup processors were subjected to the same hardware exception and failed one after the other. Ultimately, the exhibit seeks to enlighten the audience about the relevance of computer architecture concepts by using a real-world problem.
 
 The Ariane 5 rocket launched on June 4th, 1996, exploded just after 37 seconds from takeoff at the Guiana Space Centre in Kourou, French Guiana. The problem occurred in the Inertial Reference System (SRI), where software directly used from the Ariane 4 rocket, not fully validated for the new flight plan, failed. The actual cause was the wrong data type conversion process. Specifically, the rocket's horizontal speed value, stored in 64 bits, was transferred into 16 bits integer. Due to the fact that the Ariane 5 rocket was flying significantly faster and in a steep trajectory than its predecessor, the horizontal speed was so big that it could not be stored by a positive value of a 16-bit signed integer (its maximal positive value is 32,767). This resulted in an operand overflow, leading to an exception generated by hardware. The system responsible for handling exceptions did not provide any backup value but only switched off the unit completely while sending a diagnostic error code to the On-Board Computer (OBC). The OBC, unable to differentiate this error code from a normal value representing an attitude angle, took this information for granted and ordered a drastic course correction. At that time, however, another SRI, which performed in a similar manner, also crashed. As a consequence, the nozzles of solid boosters were turned to the maximum position, resulting in excessive aerodynamic loads tearing the rocket apart. The destruction ended in activating a self-destruct mechanism. The rocket carried four Cluster science satellites and was a $370 million USD mission.
 
-2. **Tech Stack**
+### 2. Tech Stack
 
-The course brief (`documents/specs.md`) requires **Node.js 26** and **Astro 6**
-(major versions). The stack below follows those requirements. Full detail and the
-reasoning live in `specs/architecture.md`.
+The course brief (`documents/specs.md`) requires **Node.js 26** and **Astro 6** (major versions). The stack below follows those requirements. Full detail and the reasoning live in `specs/architecture.md`.
 
 * **Runtime:** Node.js 26
 * **Framework:** Astro 6 with MDX (`@astrojs/mdx`) and React 19 (`@astrojs/react`)
@@ -25,84 +67,58 @@ reasoning live in `specs/architecture.md`.
 * **Animation & Utilities:** Framer Motion, clsx
 * **Language Conventions:** JavaScript (ESM)
 
-> Note: Astro includes its own build tooling and routing, so we do **not** use a
-> standalone Vite setup, React Router, or Tailwind. Keeping to the template stack
-> is required so every group's exhibit merges cleanly into the final museum site.
+> Note: Astro includes its own build tooling and routing, so we do **not** use a standalone Vite setup, React Router, or Tailwind. Keeping to the template stack is required so every group's exhibit merges cleanly into the final museum site.
 
-Proposed Interactive Element
+### Proposed Interactive Elements
 
-1. **Interactive Element 1: Interactive Overflow Visualizer**
+**1. Interactive Element 1: Interactive Overflow Visualizer**
 
-   To illustrate how an unhandled exception error can become catastrophic. We can demonstrate how a seemingly simple binary operation can cause a system failure when it encounters an integer overflow. 
+To illustrate how an unhandled exception error can become catastrophic. We can demonstrate how a seemingly simple binary operation can cause a system failure when it encounters an integer overflow. 
 
-   
+The visualizer includes a live view of the 16 individual bits - **0000 0000 0000 0000** - that make up the memory register. This register will represent the velocity of the aircraft.
 
-   The visualizer includes a live view of the 16 individual bits \- **0000 0000 0000 0000** \- that make up the memory register. This register will represent the velocity of the aircraft.
+An interactive slider then appears. And, as the slider increases, the binary value changes in real time. When it hits the upper limit, the register contains:
 
-   
+$$0111\ 1111\ 1111\ 1111_2 = 32,767_{10}$$
 
-   An interactive slider then appears. And, as the slider increases, the binary value changes in real time. When it hits the upper limit, the register contains:
+At this point, the value has reached the maximum positive number that can be stored in a signed 16-bit integer. If the rocket accelerates further and the value is incremented by one, the addition forces a carry-over that flips the most significant bit. The register immediately becomes:
 
-   
+$$1000\ 0000\ 0000\ 0000_2 = -32,768_{10}$$
 
-   **0111 1111 1111 11112 \= 32,76710** 
+This demonstrates how an overflow occurs. As the slider gradually increases, the system interprets the aircraft as moving forward and accelerating. However, once the maximum threshold is exceeded, the value wraps around from the largest positive number to the most negative number representable in the register. Instead of reading the aircraft as moving forward at high speed, the system suddenly interprets it as moving backward at an extremely high speed.
 
-   
+**2. Interactive Element 2: Mission Briefing Scrubber**
 
-   At this point, the value has reached the maximum positive number that can be stored in a signed 16-bit integer. If the rocket accelerates further and the value is incremented by one, the addition forces a carry-over that flips the most significant bit. The register immediately becomes:
+A horizontal launch-timeline scrubber covering T+0s through self-destruct at T+39.1s. Clicking any tick reveals the corresponding failure state.
 
-   
+**3. Interactive Element 3: Dual-RSI Failure Panels**
 
-   **1000 0000 0000 00002 \= \-32,76810**
+Two Inertial Reference System display panels side by side. A step control explains to the user how the system goes from 30s to 36.8s: Nominal operation, operator error at SRI 2, diagnostics pattern sent over the bus, and the same fault at SRI 1. Demonstrates the redundancy paradox: The same software causes the same fault.
 
-   
+**4. Interactive Element 4: Postmortem Flip Cards**
 
-   This demonstrates how an overflow occurs. As the slider gradually increases, the system interprets the aircraft as moving forward and accelerating. However, once the maximum threshold is exceeded, the value wraps around from the largest positive number to the most negative number representable in the register. Instead of reading the aircraft as moving forward at high speed, the system suddenly interprets it as moving backward at an extremely high speed.
+Six cards that the user can tap to “flip” through showing engineering lessons learned (Reuse of Code, Unprotected Conversion, Data vs. Diagnostics, Identical Redundancy, Specification vs. Testing, Cost, and potentially more).
 
-   
-
-   
-
-   
-
-2. **Interactive Element 2: Mission Briefing Scrubber**
-
-   A horizontal launch-timeline scrubber covering T \+0s through self-destruct at T+39.1s. Clicking any tick reveals the corresponding 
-
-   
-
-3. **Interactive Element 3: Dual-RSI Failure Panels**
-
-   Two Inertial Reference System display panels side by side. A step control explains to the user how the system goes from 30s to 36.8s: Nominal operation, operator error at SRI 2, diagnostics pattern sent over the bus, and the same fault at SRI 1\. Demonstrates the redundancy paradox: The same software causes the same fault.
-
-4. **Interactive Element 4: Postmortem Flip Cards**
-
-   Six cards that the user can tap to “flip” through showing engineering lessons learned (Reuse of Code, Unprotected Conversion, Data vs. Diagnostics, Identical Redundancy, Specification vs. Testing, Cost, and potentially more).
-
-Tentative Style Guide  
-	  
-	*Canva Link: [https://canva.link/mt5k1ic27rlymfq](https://canva.link/mt5k1ic27rlymfq)*
+### Tentative Style Guide  
+*Canva Link: [https://canva.link/mt5k1ic27rlymfq](https://canva.link/mt5k1ic27rlymfq)*
 
 **Design Rationale.** To reflect the Ariane Flight V88 incident, the virtual exhibit incorporates an aerospace theme that takes inspiration from the elements of space mission posters. It encompasses a gradient background that symbolizes the different layers of the atmosphere, cybernetic fonts, and an interactive visualizer that resembles a dashboard. 
 
 The exhibit aims to achieve a museum-grade cosmic visual tone incorporating dark backgrounds, monospaced data readouts, and cinematic transitions between rooms.
 
-**Palette**  
-Space Black \#05060A: page background  
-Deep Void \#0B1020: cards and surfaces  
-Ariane Silver \#C9D1D9: body text  
-Telemetry Cyan \#22D3EE: live data and accents  
-Booster Amber \#F59E0B: warnings and the sign bit  
-Catastrophe Red \#EF4444 : overflow and failure states  
-Signal Green \#22C55E: nominal status  
+**Palette** Space Black #05060A: page background  
+Deep Void #0B1020: cards and surfaces  
+Ariane Silver #C9D1D9: body text  
+Telemetry Cyan #22D3EE: live data and accents  
+Booster Amber #F59E0B: warnings and the sign bit  
+Catastrophe Red #EF4444 : overflow and failure states  
+Signal Green #22C55E: nominal status  
 
-**Motion language**  
-Durations: micro 120ms, standard 300ms, scene 600 ms, cinematic 1200ms.  
+**Motion language** Durations: micro 120ms, standard 300ms, scene 600 ms, cinematic 1200ms.  
 Bit flip 200 ms with a glow pulse.  
 Overflow wrap 800 ms with shake and red wash.
 
-**Layout**  
-8 px base spacing scale, 1280 px max content width, 12-column desktop grid  
+**Layout** 8 px base spacing scale, 1280 px max content width, 12-column desktop grid  
 Persistent telemetry HUD with mission state, register snapshot, and scene navigation
 
 ![alt text](images/image.png)
