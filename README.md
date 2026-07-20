@@ -11,7 +11,9 @@
 * Built the initial skeleton structures for the interactive React components.
 
 ### 2. Aha Moments & Things Learned
-*
+* Binary code is not only a mix of 0s and 1s, but it also tells the computer how data is represented or can be stored at a time.
+* The most significant byte (MSB) tells us if the binary code is a positive or negative value (0 - positive, 1 - negative)
+* To help others understand binary code better, providing visuals can be done so that the learner can understand how a process works.
 
 ### 3. Challenges & Creative Development
 * The shipped template was initially written for Astro 5 and, consequently, does not work with Astro 6, due to the major architectural changes specified in the requirements.
