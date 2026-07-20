@@ -38,7 +38,7 @@ const TOPICS = [
         <strong>ASCII</strong> table to map letters to their binary values.
       </>
     ),
-    highlights: ['Calculations', 'Compression', 'Security', 'Media processing', 'ASCII'],
+    highlights: ['Calculations', 'Compression', 'Security', 'Media Processing', 'ASCII'],
   },
   {
     id: 'how',
@@ -76,7 +76,7 @@ export default function AboutBinary() {
       <div className={styles.contentGrid}>
         <div className={styles.leftCol}>
           <div className={styles.intro}>
-            <h2 className={sceneStyles.title}>Binary code: the language of machines</h2>
+            <h2 className={sceneStyles.title}>Binary Code: The Language of Machines</h2>
             <p className={sceneStyles.lede}>
               Binary is the simple system that turns electrical signals into information.
               It powers the logic behind computers, from the first electronic machines to
