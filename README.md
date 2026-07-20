@@ -11,7 +11,10 @@
 * Built the initial skeleton structures for the interactive React components.
 
 ### 2. Aha Moments & Things Learned
-*
+* Our initial drafts assumed that readers already knew what binary meant and how it worked
+beyond just knowing it as "computer language." We realized we had to build the foundations 
+first so that they could make sense of the disaster's actual cause more intuitively.
+* We learned how to ensure that each technical concept is explained in a way that a highschool student with little to no prior programming experience could follow without oversimplifying it to the point of inacuraccy. 
 
 ### 3. Challenges & Creative Development
 * The shipped template was initially written for Astro 5 and, consequently, does not work with Astro 6, due to the major architectural changes specified in the requirements.
