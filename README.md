@@ -14,7 +14,8 @@
 * Our initial drafts assumed that readers already knew what binary meant and how it worked
 beyond just knowing it as "computer language." We realized we had to build the foundations 
 first so that they could make sense of the disaster's actual cause more intuitively.
-* We learned how to ensure that each technical concept is explained in a way that a highschool student with little to no prior programming experience could follow without oversimplifying it to the point of inacuraccy. 
+* We learned that providing visuals to explain each technical concept could be done so that a highschool student with little to no prior programming experience could follow without oversimplifying it to the point of inacuraccy.
+* Binary code is not only a mix of 0s and 1s, but it also tells the computer how data is represented or can be stored at a time. The most significant byte (MSB) tells us if the binary code is a positive or negative value (0 - positive, 1 - negative)
 
 ### 3. Challenges & Creative Development
 * The shipped template was initially written for Astro 5 and, consequently, does not work with Astro 6, due to the major architectural changes specified in the requirements.
